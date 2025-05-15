@@ -1,0 +1,96 @@
+type User {
+  id: ID
+  firstName: String
+  lastName: String
+  email: String
+  createdAt: String
+  updatedAt: String
+}
+
+type Token {
+  token: String
+}
+
+type ResetPasswordEmail {
+  userId: ID
+  token: String
+}
+type Brand {
+  id: ID
+  userId: ID
+  name: String
+  description: String
+  image: String
+  email: String
+  location: String
+  createdAt: String
+  updatedAt: String
+}
+
+type Product {
+  id: ID
+  name: String
+  brand: String
+  size: [String!]
+  color: [String!]
+  description: String
+  category: String
+  subCategory: String
+  stock: Int
+  discount: Int
+  price: Int!
+  images: [String!]
+  isFeatured: Boolean
+  createdAt: String
+  updatedAt: String
+}
+
+type Query {
+  me(token: String!): User
+  isValidResetUrl(token: String!, tokenId: String!): Boolean
+  isValidOtpUrl(id: ID!): Boolean
+  brand(id: ID, userId: ID): Brand
+  brands: [Brand]
+  products(
+    priceStart: Int
+    priceEnd: Int
+    category: String
+    subCategory: String
+  ): [Product]
+  product(id: ID!): Product
+}
+
+type Mutation {
+  login(email: String!, password: String!): Token
+  resetPasswordEmail(email: String!): Boolean
+  resetPassword(token: String!, tokenId: String!, password: String!): Boolean
+  sendOtp(
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+  ): ID
+  verifyOtp(id: ID!, otp: String!): Boolean
+  regenerateOtp(id: ID!): ID
+  createBrand(
+    name: String!
+    description: String!
+    image: String!
+    email: String!
+    location: String!
+  ): Brand!
+  createProduct(
+    name: String!
+    size: [String!]!
+    color: [String!]!
+    description: String!
+    category: String!
+    subCategory: String!
+    stock: Int!
+    discount: Int
+    price: Int!
+    isFeatured: Boolean!
+    images: [String!]!
+  ): Product!
+  deleteProduct(id: ID!): Boolean
+}
