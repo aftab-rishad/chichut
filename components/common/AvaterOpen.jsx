@@ -3,11 +3,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { HistoryIcon, LogOutIcon, LayoutDashboardIcon } from "lucide-react";
 import Link from "next/link";
 import logout from "@/action/logout";
-import { useState, useEffect } from "react";
-import brandQuery from "@/graphql/query/brand";
 
-function AvaterOpen({ data }) {
-  const [brand, setBrand] = useState(null);
+function AvaterOpen({ data, brand }) {
   const handleLogout = async () => {
     try {
       await logout();
@@ -16,13 +13,6 @@ function AvaterOpen({ data }) {
     }
   };
 
-  useEffect(() => {
-    const fetchBrands = async () => {
-      const getBrand = await brandQuery({ userId: data?.id }, "id");
-      setBrand(getBrand);
-    };
-    fetchBrands();
-  }, []);
   return (
     <div className="md:absolute md:top-14 md:right-10 bottom-0 static gap-4 md:w-72 w-full rounded-lg h-fit bg-background md:shadow-md md:border p-2 flex flex-col items-start">
       <div className="hidden md:flex items-center gap-2 bg-primary/10 rounded-lg p-2 w-full">

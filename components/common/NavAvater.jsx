@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
 import AvaterOpen from "./AvaterOpen";
 
-function NavAvater({ data }) {
+function NavAvater({ data, brand }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
@@ -16,7 +16,7 @@ function NavAvater({ data }) {
           {data?.firstName[0] + data?.lastName[0]}
         </AvatarFallback>
       </Avatar>
-      {isDropdownOpen && <AvaterOpen data={data} />}
+      {isDropdownOpen && <AvaterOpen brand={brand} data={data} />}
     </>
   );
 }

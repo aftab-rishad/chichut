@@ -1,3 +1,4 @@
+import AIButton from "@/components/common/AIButton";
 import {
   CardHeader,
   CardTitle,
@@ -15,7 +16,7 @@ const CategorySubCategory = dynamic(
     ssr: false,
   }
 );
-function GeneralForm({ formData }) {
+function GeneralForm({ formData, setFormData }) {
   return (
     <div className="space-y-4 pt-4">
       <>
@@ -40,9 +41,18 @@ function GeneralForm({ formData }) {
                 id="name"
                 placeholder="Enter product name"
               />
-              <p className="text-sm mx-2 text-muted-foreground">
-                This is the name that will be displayed on your product page.
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm mx-2 text-muted-foreground">
+                  This is the name that will be displayed on your product page.
+                </p>
+                <AIButton
+                  aiFor="name"
+                  formData={formData}
+                  setFormData={setFormData}
+                >
+                  Ask AI for Name
+                </AIButton>
+              </div>
             </label>
           </div>
           <div>
@@ -57,10 +67,19 @@ function GeneralForm({ formData }) {
                 className="min-h-32"
                 minLength={30}
               />
-              <p className="text-sm mx-2 text-muted-foreground">
-                Describe your product in detail. This helps customers make
-                informed decisions.
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm mx-2 text-muted-foreground">
+                  Describe your product in detail. This helps customers make
+                  informed decisions.
+                </p>
+                <AIButton
+                  aiFor="description"
+                  formData={formData}
+                  setFormData={setFormData}
+                >
+                  Ask AI for Description
+                </AIButton>
+              </div>
             </label>
           </div>
           <div className="flex w-full gap-4">

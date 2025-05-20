@@ -128,7 +128,7 @@ function AddProduct({ url, dataForEdit = {} }) {
           </div>
         </div>
         <Card className="mt-8">
-          <GeneralForm formData={formData} />
+          <GeneralForm setFormData={setFormData} formData={formData} />
           <PricingForm formData={formData} />
           <InformationForm
             productColor={productColor}

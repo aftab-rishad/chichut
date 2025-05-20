@@ -87,7 +87,7 @@ const categories = {
   ],
 };
 
-export default function Navbar({ session }) {
+export default function Navbar({ session, brand }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
@@ -207,7 +207,9 @@ export default function Navbar({ session }) {
                         Sale
                       </Link>
                     </div>
-                    {session?.email && <AvaterOpen data={session} />}
+                    {session?.email && (
+                      <AvaterOpen brand={brand} data={session} />
+                    )}
                   </div>
                 </div>
 
@@ -346,7 +348,7 @@ export default function Navbar({ session }) {
                 </Button>
               </>
             ) : (
-              <NavAvater data={session} />
+              <NavAvater brand={brand} data={session} />
             )}
           </div>
 
