@@ -50,7 +50,7 @@ function PricingForm({ formData }) {
                 <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={formData?.discount}
-                  min="1"
+                  min="0"
                   type="number"
                   placeholder="0.00"
                   step="0.01"

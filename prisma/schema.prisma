@@ -54,8 +54,8 @@ model product {
   category    String
   subCategory String
   stock       Int
-  discount    Int      @default(0)
-  price       Int
+  discount    Float    @default(0)
+  price       Float
   images      Json
   isFeatured  Boolean  @default(false)
   createdAt   DateTime @default(now())

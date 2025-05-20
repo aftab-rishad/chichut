@@ -36,10 +36,7 @@ async function CreateProductPage({ params: { id } }) {
         <TopSection description="Manage your product inventory and listings.">
           Products
         </TopSection>
-        <ProductTable
-          data={filteredData}
-          headerUrl={`/seller/${id}/dashboard/products/add`}
-        />
+        <ProductTable data={filteredData} id={id} />
       </div>
     </>
   );

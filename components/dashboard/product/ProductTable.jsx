@@ -48,7 +48,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 
-function ProductTable({ data = [], headerUrl }) {
+function ProductTable({ data = [], id }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -123,7 +123,7 @@ function ProductTable({ data = [], headerUrl }) {
         </div>
         <Button
           className="w-full sm:w-auto"
-          onClick={() => router.push(headerUrl)}
+          onClick={() => router.push(`/seller/${id}/dashboard/products/add`)}
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Product
@@ -239,6 +239,11 @@ function ProductTable({ data = [], headerUrl }) {
                               <div className="p-2 w-full">
                                 <div className="flex flex-col w-full gap-1">
                                   <Button
+                                    onClick={() =>
+                                      router.push(
+                                        `/seller/${id}/dashboard/products/edit/${item?.id}`
+                                      )
+                                    }
                                     variant="ghost"
                                     className="w-full justify-start"
                                   >
@@ -246,6 +251,9 @@ function ProductTable({ data = [], headerUrl }) {
                                     <span>Edit</span>
                                   </Button>
                                   <Button
+                                    onClick={() =>
+                                      router.push(`/product/${item?.id}`)
+                                    }
                                     variant="ghost"
                                     className="w-full justify-start"
                                   >

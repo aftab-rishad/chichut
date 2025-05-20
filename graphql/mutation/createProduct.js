@@ -16,8 +16,8 @@ const createProduct = async (data, response) => {
     $category: String!
     $subCategory: String!
     $stock: Int!
-    $discount: Int
-    $price: Int!
+    $discount: Float
+    $price: Float!
     $isFeatured: Boolean!
     $images: [String!]!
     ) {

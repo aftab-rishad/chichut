@@ -11,22 +11,28 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import createProduct from "@/graphql/mutation/createProduct";
+import { useRouter } from "next/navigation";
+import editProduct from "@/graphql/mutation/editProduct";
 
-function AddProduct({ url, dataForEdit }) {
+function AddProduct({ url, dataForEdit = {} }) {
+  const { images, id, brand, color, ...forEdit } = dataForEdit;
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    category: "",
-    color: "",
-    description: "",
-    discount: "",
-    isFeatured: "",
-    name: "",
-    price: "",
-    size: "",
-    stock: "",
-    subCategory: "",
-  });
-  const [images, setImages] = useState([]);
+  const [formData, setFormData] = useState(
+    forEdit || {
+      category: "",
+      description: "",
+      discount: "",
+      isFeatured: "",
+      name: "",
+      price: "",
+      size: "",
+      stock: "",
+      subCategory: "",
+    }
+  );
+  const [productImages, setProductImages] = useState(images || []);
+  const [productColor, setProductColor] = useState(color || []);
+  const router = useRouter();
   const onSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -34,29 +40,39 @@ function AddProduct({ url, dataForEdit }) {
     const data = {
       ...Object.fromEntries(formData.entries()),
       isFeatured: formData.get("isFeatured") == "true" ? true : false,
-      images,
+      images: productImages,
+      color: productColor,
     };
-    if (images?.length <= 0) {
+    if (productImages?.length <= 0) {
       toast.error("Please upload at least one image.");
       setIsLoading(false);
     } else {
       const slicedData = {
         ...data,
-        color: data?.color?.split(","),
         size: data?.size?.split(","),
         stock: Number(data?.stock),
         price: Number(data?.price),
         discount: Number(data?.discount),
       };
-      const res = await createProduct(slicedData, "name");
+      let res;
+      if (dataForEdit?.name) {
+        res = await editProduct({ ...slicedData, id });
+      } else {
+        res = await createProduct(slicedData, "name");
+      }
       if (res?.error) {
         toast.error(res.error);
         setIsLoading(false);
       } else {
-        toast.success("Product created successfully!");
+        toast.success(
+          dataForEdit?.name
+            ? "Product updated successfully!"
+            : "Product created successfully!"
+        );
+        dataForEdit?.name && router.push(url);
         setFormData({
           category: "",
-          color: "",
+          color: [],
           description: "",
           discount: "",
           isFeatured: "",
@@ -66,7 +82,7 @@ function AddProduct({ url, dataForEdit }) {
           stock: "",
           subCategory: "",
         });
-        setImages([]);
+        setProductImages([]);
         setIsLoading(false);
       }
     }
@@ -77,10 +93,9 @@ function AddProduct({ url, dataForEdit }) {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      images,
+      productImages,
       isFeatured: this?.isFeatured === "true" ? true : false,
     }));
-    console.log(formData);
   };
   return (
     <>
@@ -93,7 +108,9 @@ function AddProduct({ url, dataForEdit }) {
                 <span className="sr-only">Back</span>
               </Button>
             </Link>
-            <h1 className="text-3xl font-bold tracking-tight">Add Product</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {dataForEdit?.name ? "Edit" : "Add"} Product
+            </h1>
           </div>
           <div className="flex items-center gap-2">
             <Link href={url}>
@@ -113,8 +130,12 @@ function AddProduct({ url, dataForEdit }) {
         <Card className="mt-8">
           <GeneralForm formData={formData} />
           <PricingForm formData={formData} />
-          <InformationForm formData={formData} />
-          <ImagesForm images={images} setImages={setImages} />
+          <InformationForm
+            productColor={productColor}
+            setProductColor={setProductColor}
+            formData={formData}
+          />
+          <ImagesForm images={productImages} setImages={setProductImages} />
         </Card>
       </form>
     </>

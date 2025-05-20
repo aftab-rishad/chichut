@@ -139,5 +139,41 @@ export const resolvers = {
       });
       return deletedProduct;
     },
+    editProduct: async (
+      _,
+      {
+        id,
+        name,
+        size,
+        color,
+        description,
+        category,
+        subCategory,
+        stock,
+        discount,
+        isFeatured,
+        price,
+        images,
+      },
+      { token }
+    ) => {
+      await new UserService().isAuthenticated({ token });
+      const editProduct = await new ProductService().editProduct({
+        token,
+        id,
+        name,
+        size,
+        color,
+        description,
+        category,
+        subCategory,
+        stock,
+        discount,
+        isFeatured,
+        price,
+        images,
+      });
+      return editProduct;
+    },
   },
 };

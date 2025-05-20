@@ -37,8 +37,8 @@ type Product {
   category: String
   subCategory: String
   stock: Int
-  discount: Int
-  price: Int!
+  discount: Float
+  price: Float!
   images: [String!]
   isFeatured: Boolean
   createdAt: String
@@ -87,10 +87,24 @@ type Mutation {
     category: String!
     subCategory: String!
     stock: Int!
-    discount: Int
-    price: Int!
+    discount: Float
+    price: Float!
     isFeatured: Boolean!
     images: [String!]!
   ): Product!
   deleteProduct(id: ID!): Boolean
+  editProduct(
+    id: ID!
+    name: String!
+    size: [String!]!
+    color: [String!]!
+    description: String!
+    category: String!
+    subCategory: String!
+    stock: Int!
+    discount: Float
+    price: Float!
+    isFeatured: Boolean!
+    images: [String!]!
+  ): Product!
 }

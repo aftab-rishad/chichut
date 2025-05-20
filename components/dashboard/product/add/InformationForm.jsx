@@ -6,7 +6,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Package } from "lucide-react";
-function InformationForm({ formData }) {
+import SelectColor from "./SelectColor";
+function InformationForm({ formData, productColor, setProductColor }) {
   return (
     <>
       <CardHeader>
@@ -17,20 +18,16 @@ function InformationForm({ formData }) {
         <CardDescription>Manage your product's details.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 items-center md:grid-cols-2 gap-4">
           <div>
             <label htmlFor="color" className="flex flex-col space-y-2">
               <span className="mx-2 font-medium">Available colors</span>
-              <Input
-                required
-                value={formData?.color}
-                name="color"
-                id="color"
-                type="text"
-                placeholder="e.g. Red, Green, Blue"
+              <SelectColor
+                productColor={productColor}
+                setProductColor={setProductColor}
               />
               <p className="text-sm mx-2 text-muted-foreground">
-                Add colors separated by commas. For example: Red, Green, Blue.
+                Add your product colors.
               </p>
             </label>
           </div>
@@ -46,8 +43,8 @@ function InformationForm({ formData }) {
                 placeholder="e.g. XL, XXL or 10cm, 12cm"
               />
               <p className="text-sm mx-2 text-muted-foreground">
-                Add sizes separated by commas. For example: XL, XXL or 10cm
-                12cm.
+                Add sizes separated by commas. For example: XL, XXL or US 28, US
+                30.
               </p>
             </label>
           </div>

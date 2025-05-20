@@ -48,6 +48,58 @@ class ProductService {
       throw new Error(error.message);
     }
   }
+  async editProduct({
+    token,
+    id,
+    name,
+    size,
+    color,
+    description,
+    category,
+    subCategory,
+    stock,
+    discount,
+    isFeatured,
+    price,
+    images,
+  }) {
+    try {
+      const userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
+      const brand = await this.db.brand.findUnique({
+        where: { userId: Number(userId) },
+      });
+      if (!brand) {
+        throw new Error("Brand not found");
+      }
+      const product = await this.db.product.findUnique({
+        where: { id: Number(id) },
+      });
+
+      if (!product || product.brand !== brand.name) {
+        throw Error("You are not authorized to edit this product");
+      } else {
+        const updatedProduct = await this.db.product.update({
+          where: { id: Number(id) },
+          data: {
+            name,
+            size,
+            color,
+            description,
+            category,
+            subCategory,
+            stock: Number(stock),
+            discount: Number(discount || 0),
+            price: Number(price),
+            isFeatured: isFeatured || false,
+            images,
+          },
+        });
+        return updatedProduct;
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
   async products({
     priceStart = 0,
     priceEnd = 10000000,
