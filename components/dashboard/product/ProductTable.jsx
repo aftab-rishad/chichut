@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Search,
-  Plus,
-  Edit,
-  Trash,
-  Eye,
-  MoreHorizontal,
-  Loader2,
-} from "lucide-react";
+import { Search, Plus, Edit, Trash, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -40,21 +32,13 @@ import { useState } from "react";
 import Image from "next/image";
 import deleteProduct from "@/graphql/mutation/deleteProduct";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogTitle,
-  DialogContent,
-  DialogHeader,
-} from "@/components/ui/dialog";
+import DropdownMenu from "@/components/common/DropdownMenu";
 
 function ProductTable({ data = [], id }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
+  const [isLoading, setIsLoading] = useState(false);
   const head = [
     "Image",
     "Product",
@@ -84,7 +68,6 @@ function ProductTable({ data = [], id }) {
         toast.error(isDelete?.error);
         setIsLoading(false);
       } else {
-        setIsModalOpen(false);
         setIsLoading(false);
       }
     } catch (error) {
@@ -137,7 +120,7 @@ function ProductTable({ data = [], id }) {
           <CardDescription>{filteredData?.length} items found</CardDescription>
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
-          <div className="min-w-[640px]">
+          <div className="min-w-[640px] z-20">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -223,62 +206,35 @@ function ProductTable({ data = [], id }) {
                       </TableCell>
                       <TableCell className="text-right p-0">
                         <div className="relative flex justify-end p-4">
-                          <Dialog
-                            open={isModalOpen}
-                            onOpenChange={setIsModalOpen}
-                          >
-                            <DialogTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-md">
-                              <DialogHeader className="flex flex-row items-center justify-between border-b pb-2 mb-2">
-                                <DialogTitle>Actions</DialogTitle>
-                              </DialogHeader>
-                              <div className="p-2 w-full">
-                                <div className="flex flex-col w-full gap-1">
-                                  <Button
-                                    onClick={() =>
-                                      router.push(
-                                        `/seller/${id}/dashboard/products/edit/${item?.id}`
-                                      )
-                                    }
-                                    variant="ghost"
-                                    className="w-full justify-start"
-                                  >
-                                    <Edit className="h-4 w-4 mr-2" />
-                                    <span>Edit</span>
-                                  </Button>
-                                  <Button
-                                    onClick={() =>
-                                      router.push(`/product/${item?.id}`)
-                                    }
-                                    variant="ghost"
-                                    className="w-full justify-start"
-                                  >
-                                    <Eye className="h-4 w-4 mr-2" />
-                                    <span>View</span>
-                                  </Button>
-                                  <Button
-                                    onClick={() =>
-                                      handleDeleteProduct(item?.id)
-                                    }
-                                    variant="denger"
-                                    className="w-full justify-start"
-                                    disabled={isLoading}
-                                  >
-                                    <Trash className="h-4 w-4 mr-2" />
-                                    {isLoading ? (
-                                      <Loader2 />
-                                    ) : (
-                                      <span>Delete</span>
-                                    )}
-                                  </Button>
-                                </div>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
+                          <DropdownMenu
+                            buttonText="Resources"
+                            items={[
+                              {
+                                label: "Edit",
+                                disabled: false,
+                                icon: <Edit className="h-4 w-4 mr-2" />,
+                                onClick: () =>
+                                  router.push(
+                                    `/seller/${id}/dashboard/products/edit/${item?.id}`
+                                  ),
+                              },
+                              {
+                                label: "View",
+                                disabled: false,
+                                icon: <Eye className="h-4 w-4 mr-2" />,
+                                onClick: () =>
+                                  router.push(`/product/${item?.id}`),
+                              },
+                              {
+                                label: "Delete",
+                                disabled: isLoading,
+                                icon: <Trash className="h-4 w-4 mr-2" />,
+                                onClick: () => {
+                                  handleDeleteProduct(item?.id);
+                                },
+                              },
+                            ]}
+                          />
                         </div>
                       </TableCell>
                     </TableRow>

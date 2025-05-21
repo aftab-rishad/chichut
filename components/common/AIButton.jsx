@@ -5,6 +5,7 @@ import { F7WandStars } from "@/components/common/Svg";
 import GenerateName from "@/action/generate-ai-content";
 import { toast } from "sonner";
 import { useState } from "react";
+import getProducts from "@/graphql/query/products";
 
 function AIButton({ children, setFormData, formData, aiFor }) {
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,18 @@ function AIButton({ children, setFormData, formData, aiFor }) {
     const subCategory = formData?.subCategory;
     const name = formData?.name;
 
+    const allProducts = await getProducts("name description", {
+      category,
+      subCategory,
+    });
+    const allProductsName = allProducts?.map((item) => item?.name);
+    const allProductsDescription = allProducts?.map(
+      (item) => item?.description
+    );
+
+    console.log("allProductsName", allProductsName);
+    console.log("allProductsDescription", allProductsDescription);
+
     if (aiFor === "name") {
       if (!category || !subCategory) {
         toast.error("Please select category and sub-category.");
@@ -24,6 +37,8 @@ function AIButton({ children, setFormData, formData, aiFor }) {
         return;
       }
       prompt = `Generate a catchy and attractive product title (only the title) for an item in the '${subCategory}' sub-category of '${category}'. The title must be between 6 and 15 words long and must not include any of the following: ${allContent?.join(
+        ", "
+      )}, ${allProductsName?.join(
         ", "
       )}. Do not include any additional content—only the product name.`;
       setFormData((prev) => ({
@@ -37,6 +52,8 @@ function AIButton({ children, setFormData, formData, aiFor }) {
         return;
       }
       prompt = `Generate a compelling product description for '${name}', which belongs to the '${subCategory}' sub-category under the '${category}' category. The description must be between 40 and 60 words and must not include any of the following: ${allContent?.join(
+        ", "
+      )}, ${allProductsDescription?.join(
         ", "
       )}. Only output the product description—do not include any additional text.`;
     }
@@ -69,7 +86,7 @@ function AIButton({ children, setFormData, formData, aiFor }) {
         className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
       >
         <F7WandStars className="text-black dark:text-white" />
-        <span>{loading ? "Generating.." : children}</span>
+        <span>{loading ? "Generating..." : children}</span>
       </HoverBorderGradient>
     </div>
   );
