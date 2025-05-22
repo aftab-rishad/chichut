@@ -51,12 +51,12 @@ class BrandService {
       throw new Error(error.message);
     }
   }
-  async brand({ id, userId }) {
+  async brand({ id, userId, name }) {
     const idInt = Number(id);
     const userIdInt = Number(userId);
     try {
-      if (!idInt && !userIdInt) {
-        throw new Error("Id is required");
+      if (!idInt && !userIdInt && !name) {
+        throw new Error("Please provide id, userId or name");
       }
       if (idInt) {
         const brand = await this.db.brand.findUnique({
@@ -66,12 +66,20 @@ class BrandService {
           throw new Error(`Brand not found with ${id}`);
         }
         return brand;
-      } else {
+      } else if (userIdInt) {
         const brand = await this.db.brand.findUnique({
           where: { userId: userIdInt },
         });
         if (!brand) {
           throw new Error(`Brand not found with ${userId}`);
+        }
+        return brand;
+      } else {
+        const brand = await this.db.brand.findUnique({
+          where: { name: name },
+        });
+        if (!brand) {
+          throw new Error(`Brand not found with ${name}`);
         }
         return brand;
       }

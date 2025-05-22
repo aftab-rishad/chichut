@@ -19,8 +19,8 @@ export const resolvers = {
       const user = await new UserService().isValidOtpUrl({ id });
       return user;
     },
-    brand: async (_, { id, userId }) => {
-      const brand = await new BrandService().brand({ id, userId });
+    brand: async (_, { id, userId, name }) => {
+      const brand = await new BrandService().brand({ id, userId, name });
       return brand;
     },
     brands: async () => {

@@ -6,6 +6,8 @@ import GenerateName from "@/action/generate-ai-content";
 import { toast } from "sonner";
 import { useState } from "react";
 import getProducts from "@/graphql/query/products";
+import me from "@/graphql/query/me";
+import brand from "@/graphql/query/brand";
 
 function AIButton({ children, setFormData, formData, aiFor }) {
   const [loading, setLoading] = useState(false);
@@ -18,17 +20,22 @@ function AIButton({ children, setFormData, formData, aiFor }) {
     const subCategory = formData?.subCategory;
     const name = formData?.name;
 
-    const allProducts = await getProducts("name description", {
+    const allProducts = await getProducts("name brand description", {
       category,
       subCategory,
     });
-    const allProductsName = allProducts?.map((item) => item?.name);
-    const allProductsDescription = allProducts?.map(
-      (item) => item?.description
+
+    const userId = await me("id");
+    const myBrand = await brand({ userId: userId?.id }, "name");
+
+    const allProductsByBrand = allProducts?.filter(
+      (item) => item?.brand === myBrand?.name
     );
 
-    console.log("allProductsName", allProductsName);
-    console.log("allProductsDescription", allProductsDescription);
+    const allProductsName = allProductsByBrand?.map((item) => item?.name);
+    const allProductsDescription = allProductsByBrand?.map(
+      (item) => item?.description
+    );
 
     if (aiFor === "name") {
       if (!category || !subCategory) {
