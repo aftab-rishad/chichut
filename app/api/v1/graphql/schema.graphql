@@ -11,6 +11,18 @@ type Token {
   token: String
 }
 
+type cart {
+  id: ID
+  userId: ID
+  productId: ID
+  brandId: ID
+  color: String
+  size: String
+  quantity: Int
+  createdAt: String
+  updatedAt: String
+}
+
 type ResetPasswordEmail {
   userId: ID
   token: String
@@ -58,6 +70,7 @@ type Query {
     subCategory: String
   ): [Product]
   product(id: ID!): Product
+  carts: [cart]
 }
 
 type Mutation {
@@ -107,4 +120,7 @@ type Mutation {
     isFeatured: Boolean!
     images: [String!]!
   ): Product!
+  addToCart(productId: ID!, quantity: Int!, color: String!, size: String!): cart
+  removeFromCart(id: ID!): Boolean
+  updateCart(id: ID!, quantity: Int!): cart
 }

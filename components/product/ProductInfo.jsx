@@ -4,16 +4,61 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { StarIcon as LucideStarIcon, MinusIcon, PlusIcon } from "lucide-react";
+import {
+  Loader2,
+  StarIcon as LucideStarIcon,
+  MinusIcon,
+  PlusIcon,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import addToCart from "@/graphql/mutation/addToCart";
 
-function ProductInfo({ product }) {
+function ProductInfo({ product, isAlreadyInCart = false }) {
   const [quantity, setQuantity] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedSize, setSelectedSize] = useState(product.size[0]);
   const [selectedColor, setSelectedColor] = useState(product?.color[0]);
+  const router = useRouter();
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const handleAddToCart = async () => {
+    setIsLoading(true);
+    if (isAlreadyInCart) {
+      router.push("/cart");
+      setIsLoading(false);
+    } else {
+      try {
+        const res = await addToCart({
+          productId: product.id,
+          quantity,
+          color: selectedColor,
+          size: selectedSize,
+        });
+        if (res?.error) {
+          toast.error(
+            res.error ||
+              "Failed to add product to cart. Please try again later."
+          );
+          setIsLoading(false);
+        } else {
+          toast.success("Product added to cart successfully!");
+          router.push("/cart");
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        toast.error(
+          error?.message ||
+            "Failed to add product to cart. Please try again later."
+        );
+        setIsLoading(false);
+      }
+    }
+  };
 
   return (
     <Card className="border-0 shadow-none">
@@ -129,10 +174,17 @@ function ProductInfo({ product }) {
         <div className="flex flex-col sm:flex-row gap-4 pt-4">
           <Button
             className="flex-1"
-            disabled={product?.stock <= 0}
+            disabled={product?.stock <= 0 || isLoading}
+            onClick={handleAddToCart}
             variant="outline"
           >
-            Add to Cart
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : isAlreadyInCart ? (
+              "Go to Cart"
+            ) : (
+              "Add to Cart"
+            )}
           </Button>
           <Button disabled={product?.stock <= 0} className="flex-1">
             Buy Now

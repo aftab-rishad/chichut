@@ -360,10 +360,12 @@ export default function Navbar({ session, brand }) {
             </Button>
 
             {/* Cart */}
-            <Button variant="ghost" size="icon">
-              <ShoppingBag className="h-5 w-5" />
-              <span className="sr-only">Cart</span>
-            </Button>
+            <Link href="/cart" className="relative">
+              <Button variant="ghost" size="icon">
+                <ShoppingBag className="h-5 w-5" />
+                <span className="sr-only">Cart</span>
+              </Button>
+            </Link>
             <ModeToggle />
           </div>
 

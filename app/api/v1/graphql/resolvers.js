@@ -40,6 +40,11 @@ export const resolvers = {
       const product = await new ProductService().product({ id });
       return product;
     },
+    carts: async (_, __, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const cart = await new ProductService().carts({ token });
+      return cart;
+    },
   },
   Mutation: {
     login: async (_, { email, password }) => {
@@ -174,6 +179,34 @@ export const resolvers = {
         images,
       });
       return editProduct;
+    },
+    addToCart: async (_, { productId, quantity, color, size }, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const addToCart = await new ProductService().addToCart({
+        token,
+        productId,
+        quantity,
+        color,
+        size,
+      });
+      return addToCart;
+    },
+    removeFromCart: async (_, { id }, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const removeFromCart = await new ProductService().removeFromCart({
+        token,
+        id,
+      });
+      return removeFromCart;
+    },
+    updateCart: async (_, { id, quantity }, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const updateCart = await new ProductService().updateCart({
+        token,
+        id,
+        quantity,
+      });
+      return updateCart;
     },
   },
 };

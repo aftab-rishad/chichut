@@ -9,7 +9,7 @@ import getProducts from "@/graphql/query/products";
 import me from "@/graphql/query/me";
 import brand from "@/graphql/query/brand";
 
-function AIButton({ children, setFormData, formData, aiFor }) {
+function AIButton({ children, setFormData, formData, aiFor, ...props }) {
   const [loading, setLoading] = useState(false);
   const [allContent, setAllContent] = useState([]);
 
@@ -83,7 +83,7 @@ function AIButton({ children, setFormData, formData, aiFor }) {
     }
   };
   return (
-    <div className="flex justify-center text-center">
+    <div className="flex justify-center text-center" {...props}>
       <HoverBorderGradient
         disable={loading}
         containerClassName="rounded-full"

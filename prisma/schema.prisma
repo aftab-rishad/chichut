@@ -73,3 +73,15 @@ model brand {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model cart {
+  id        Int      @id @default(autoincrement())
+  userId    Int     
+  productId Int
+  brandId   Int
+  color     String
+  size      String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

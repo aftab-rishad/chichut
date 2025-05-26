@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import getProductById from "@/graphql/query/product";
 import brand from "@/graphql/query/brand";
+import carts from "@/graphql/query/carts";
 
 const ProductGallery = dynamic(
   () => import("@/components/product/ProductGallery"),
@@ -65,25 +66,33 @@ const relatedProducts = [
 export default async function ProductPage({ id }) {
   let product;
   let vendor;
+  let allCarts;
 
   try {
     product = await getProductById(
       id,
-      "name description color size images price stock discount brand"
+      "id name description color size images price stock discount brand"
     );
     vendor = await brand(
       { name: product?.brand },
       "id name image email location"
     );
+    allCarts = await carts("productId");
+    console.log("Carts Data:", allCarts);
   } catch (error) {
     console.error("Error fetching data:", error);
   }
+
+  const isAlreadyInCart =
+    allCarts?.find((cart) => cart.productId === id)?.productId === id;
+
+  console.log("isAlreadyInCart:", isAlreadyInCart);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <ProductGallery images={product?.images} />
-        <ProductInfo product={product} />
+        <ProductInfo product={product} isAlreadyInCart={isAlreadyInCart} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

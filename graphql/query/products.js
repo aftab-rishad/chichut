@@ -22,8 +22,8 @@ const getProducts = async (
   try {
     const graphqlClient = await getGraphQLClient();
     const data = await graphqlClient.request(getProductsQuery, {
-      priceStart,
-      priceEnd,
+      priceStart: priceStart || 0,
+      priceEnd: priceEnd || 1000000,
       category,
       subCategory,
     });

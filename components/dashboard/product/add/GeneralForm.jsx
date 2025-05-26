@@ -41,11 +41,12 @@ function GeneralForm({ formData, setFormData }) {
                 id="name"
                 placeholder="Enter product name"
               />
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between relative">
                 <p className="text-sm mx-2 text-muted-foreground">
                   This is the name that will be displayed on your product page.
                 </p>
                 <AIButton
+                  className="absolute right-2 top-1"
                   aiFor="name"
                   formData={formData}
                   setFormData={setFormData}
@@ -67,12 +68,13 @@ function GeneralForm({ formData, setFormData }) {
                 className="min-h-32"
                 minLength={30}
               />
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between relative">
                 <p className="text-sm mx-2 text-muted-foreground">
                   Describe your product in detail. This helps customers make
                   informed decisions.
                 </p>
                 <AIButton
+                  className="absolute right-2 top-1"
                   aiFor="description"
                   formData={formData}
                   setFormData={setFormData}
