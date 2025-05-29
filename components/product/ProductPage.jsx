@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import getProductById from "@/graphql/query/product";
 import brand from "@/graphql/query/brand";
 import carts from "@/graphql/query/carts";
+import getReviewByProduct from "@/graphql/query/getReviewByProduct";
 
 const ProductGallery = dynamic(
   () => import("@/components/product/ProductGallery"),
@@ -68,6 +69,12 @@ export default async function ProductPage({ id }) {
   let vendor;
   let allCarts;
 
+  const reviews = await getReviewByProduct({ id }, "rating");
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+      : 0;
+
   try {
     product = await getProductById(
       id,
@@ -92,7 +99,12 @@ export default async function ProductPage({ id }) {
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <ProductGallery images={product?.images} />
-        <ProductInfo product={product} isAlreadyInCart={isAlreadyInCart} />
+        <ProductInfo
+          product={product}
+          isAlreadyInCart={isAlreadyInCart}
+          averageRating={averageRating}
+          reviewCount={reviews?.length}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

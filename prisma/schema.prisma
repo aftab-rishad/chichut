@@ -110,6 +110,7 @@ model order {
 
 model review {
   id        Int      @id @default(autoincrement())
+  user      Json
   userId    Int
   productId Int
   rating    Int

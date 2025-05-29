@@ -13,8 +13,45 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, StarIcon } from "lucide-react";
+import getReviewByProduct from "@/graphql/query/getReviewByProduct";
+import { MoodEmpty } from "../common/Svg";
+import me from "@/graphql/query/me";
+import getAllOrders from "@/graphql/query/getAllOrders";
+import RatingBtn from "./RatingBtn";
+import { ScrollArea } from "../ui/scroll-area";
 
-export default function AdditionalInfo({ product }) {
+export default async function AdditionalInfo({ product }) {
+  const reviews = await getReviewByProduct(
+    { id: product?.id },
+    `user {
+      firstName
+      lastName
+      id
+    }
+    rating
+    comment
+    createdAt
+    id`
+  );
+
+  const session = await me("id");
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+      : 0;
+  const alreadyReviewDone = reviews.find(
+    (r) => Number(r?.user?.id) === Number(session?.id)
+  );
+  const orders = await getAllOrders(`userId products {
+      id
+    }`);
+  const myOrders = orders?.filter(
+    (order) => Number(order?.userId) === Number(session?.id)
+  );
+  const orderProductIds = myOrders
+    .flatMap((order) => order.products || [])
+    .find((p) => p?.id && Number(p.id) === Number(product?.id));
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -158,7 +195,7 @@ export default function AdditionalInfo({ product }) {
                       <StarIcon
                         key={i}
                         className={`h-4 w-4 ${
-                          i < Math.floor(product?.rating || 4.5)
+                          i < Math.floor(Number(averageRating))
                             ? "text-yellow-400 fill-yellow-400"
                             : "text-gray-300"
                         }`}
@@ -166,69 +203,56 @@ export default function AdditionalInfo({ product }) {
                     ))}
                   </div>
                   <span className="ml-2 text-sm text-muted-foreground">
-                    Based on {product?.reviewCount || 2} reviews
+                    Based on {reviews?.length} reviews
                   </span>
                 </div>
               </div>
               <div className="space-y-4">
-                <div className="border-b pb-4">
-                  <div className="flex items-center mb-1">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon
-                          key={i}
-                          className={`h-3 w-3 ${
-                            i < 5
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
+                <ScrollArea className="h-32 ">
+                  {reviews?.length >= 1 ? (
+                    reviews?.map((review) => (
+                      <div key={review?.id} className="border-b pb-4">
+                        <div className="flex items-center mb-1">
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <StarIcon
+                                key={i}
+                                className={`h-3 w-3 ${
+                                  i < Number(review?.rating)
+                                    ? "text-yellow-400 fill-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="ml-2 text-sm font-medium">
+                            {review?.user?.firstName} {review?.user?.lastName}.
+                          </span>
+                          <span className="ml-2 text-xs text-muted-foreground">
+                            {new Date(review?.createdAt)}
+                          </span>
+                        </div>
+                        <p className="text-sm">{review?.comment}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="w-full min-h-32 text-foreground/60 flex flex-col justify-center items-center">
+                      <span className="text-9xl absolute text-foreground/5">
+                        <MoodEmpty />
+                      </span>
+                      <span>
+                        No reviews have been submitted for this product yet.
+                      </span>
                     </div>
-                    <span className="ml-2 text-sm font-medium">Sarah J.</span>
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      2 weeks ago
-                    </span>
-                  </div>
-                  <p className="text-sm">
-                    Absolutely love this sweater! The material is so soft and
-                    comfortable. I got the cream color and it goes with
-                    everything. Highly recommend!
-                  </p>
-                </div>
-                <div className="border-b pb-4">
-                  <div className="flex items-center mb-1">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon
-                          key={i}
-                          className={`h-3 w-3 ${
-                            i < 4
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="ml-2 text-sm font-medium">Michael T.</span>
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      1 month ago
-                    </span>
-                  </div>
-                  <p className="text-sm">
-                    Great quality for the price. Fits a bit larger than
-                    expected, so I would recommend sizing down if you prefer a
-                    more fitted look.
-                  </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <Button variant="outline" size="sm">
-                    View All Reviews
-                  </Button>
-                  <Button variant="default" size="sm">
-                    Add Reviews <PlusIcon />
-                  </Button>
-                </div>
+                  )}
+                </ScrollArea>
+
+                <RatingBtn
+                  alreadyReviewDone={alreadyReviewDone}
+                  orderProductIds={orderProductIds}
+                  productName={product?.name}
+                  productId={Number(product?.id)}
+                />
               </div>
             </div>
           </TabsContent>

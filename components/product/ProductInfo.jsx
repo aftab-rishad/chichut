@@ -14,7 +14,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import addToCart from "@/graphql/mutation/addToCart";
 
-function ProductInfo({ product, isAlreadyInCart = false }) {
+function ProductInfo({
+  product,
+  isAlreadyInCart = false,
+  averageRating = 0,
+  reviewCount,
+}) {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedSize, setSelectedSize] = useState(product.size?.[0]);
@@ -89,7 +94,7 @@ function ProductInfo({ product, isAlreadyInCart = false }) {
                 <LucideStarIcon
                   key={i}
                   className={`h-4 w-4 ${
-                    i < Math.floor(product?.rating || 0)
+                    i < Math.floor(Number(averageRating))
                       ? "text-yellow-400 fill-yellow-400"
                       : "text-gray-300"
                   }`}
@@ -97,7 +102,7 @@ function ProductInfo({ product, isAlreadyInCart = false }) {
               ))}
             </div>
             <span className="ml-2 text-sm text-muted-foreground">
-              {product?.rating || 0} ({product?.reviewCount || 0} reviews)
+              {averageRating} ({reviewCount} reviews)
             </span>
           </div>
         </div>

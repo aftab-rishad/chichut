@@ -81,6 +81,7 @@ input ProductInput {
 
 type Review {
   id: ID!
+  user: User!
   userId: ID!
   productId: ID!
   rating: Int!
@@ -126,6 +127,7 @@ type Query {
   product(id: ID!): Product
   carts: [cart]
   getReviewByProduct(id: ID!): [Review]
+  orders: [Order]
 }
 
 type Mutation {

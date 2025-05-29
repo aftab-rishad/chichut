@@ -58,7 +58,7 @@ class OrderService {
           products,
         },
       });
-      if (data) {
+      if (data && products?.length > 1) {
         const emptyCart = await this.db.cart.deleteMany({
           where: { userId: Number(userId?.id) },
         });
@@ -67,6 +67,15 @@ class OrderService {
       return data;
     } catch (error) {
       console.log(error);
+      throw new Error(error.message);
+    }
+  }
+  async orders() {
+    try {
+      const orders = await this.db.order.findMany({});
+      return orders;
+    } catch (error) {
+      console.log(error.message);
       throw new Error(error.message);
     }
   }

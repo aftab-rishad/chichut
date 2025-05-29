@@ -270,6 +270,8 @@ class ProductService {
   async reviewProduct({ productId, comment, rating }, { token }) {
     try {
       const userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
+      const user = await db.user.findUnique({ where: { id: Number(userId) } });
+      const { password, ...userForReview } = user;
       const product = await this.db.product.findUnique({
         where: {
           id: Number(productId),
@@ -283,19 +285,16 @@ class ProductService {
           userId: Number(userId),
         },
       });
-      const orderProductIds = orders.map((order) => {
-        const matchingProduct = order.products?.find(
-          (p) => Number(p.id) === Number(product?.id)
-        );
-        return {
-          id: matchingProduct?.id || false,
-        };
-      })[0];
+      const orderProductIds = orders
+        .flatMap((order) => order.products || [])
+        .find((p) => p?.id && Number(p.id) === Number(product?.id));
+
       const allMyReview = await this.db.review.findMany({
         where: {
           userId: Number(userId),
         },
       });
+
       const alreadyReviewDone = allMyReview.find(
         (r) => Number(r?.productId) === Number(product?.id)
       );
@@ -316,6 +315,7 @@ class ProductService {
             productId: Number(productId),
             rating: Number(rating),
             comment,
+            user: userForReview,
           },
         });
         return data;
@@ -340,8 +340,8 @@ class ProductService {
         return review;
       }
     } catch (error) {
-      throw new Error(error.message);
       console.log(error.message);
+      throw new Error(error.message);
     }
   }
 }

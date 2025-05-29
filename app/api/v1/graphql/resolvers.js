@@ -50,6 +50,10 @@ export const resolvers = {
       const data = await new ProductService().getReviewByProduct({ id });
       return data;
     },
+    orders: async () => {
+      const data = await new OrderService().orders();
+      return data;
+    },
   },
   Mutation: {
     login: async (_, { email, password }) => {

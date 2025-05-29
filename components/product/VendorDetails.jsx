@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { StarIcon, MessageCircleIcon } from "lucide-react";
+import { MessageCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { Verified } from "../common/Svg";
 import ChatWithVendor from "./ChatWithVendor";
@@ -29,23 +29,6 @@ function VendorDetails({ vendor = {} }) {
                 <h3 className="font-medium">{vendor?.name}</h3>
                 <span className="text-[#1D9BF0] text-xs">
                   <Verified />
-                </span>
-              </div>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <StarIcon
-                      key={i}
-                      className={`h-3 w-3 ${
-                        i < Math.floor(vendor?.rating || 0)
-                          ? "text-yellow-400 fill-yellow-400"
-                          : "text-gray-300"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span className="ml-1">
-                  {vendor?.rating || 0} ({vendor?.reviewCount || 0})
                 </span>
               </div>
               <div className="text-sm text-muted-foreground">
