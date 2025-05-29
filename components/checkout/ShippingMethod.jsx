@@ -45,7 +45,7 @@ export default function ShippingMethod({ selectedMethod, onMethodChange }) {
                   className={`p-4 transition-all duration-200 hover:shadow-md ${
                     selectedMethod === option.id
                       ? "ring-2 ring-primary bg-primary/10 dark:bg-primary/20"
-                      : "hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                      : "hover:bg-foreground/5"
                   }`}
                 >
                   <div className="flex items-center space-x-3">

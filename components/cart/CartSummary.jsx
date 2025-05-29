@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, CreditCard, Loader2 } from "lucide-react";
+import { CreditCard, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,9 +12,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 
 function CartSummary({ items }) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   // Calculate totals
   const subtotal = items.reduce(
@@ -26,12 +28,7 @@ function CartSummary({ items }) {
 
   const handleCheckout = () => {
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // In a real app, this would redirect to checkout or payment page
-      console.log("Proceeding to checkout");
-    }, 1500);
+    router.push("/checkout?product=cart");
   };
 
   return (

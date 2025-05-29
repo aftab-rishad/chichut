@@ -11,20 +11,69 @@ import BillingForm from "./BillingForm";
 import ShippingMethod from "./ShippingMethod";
 import PaymentMethod from "./PaymentMethod";
 import OrderSummary from "./OrderSummary";
+import { toast } from "sonner";
+import createOrder from "@/graphql/mutation/createOrder";
 
-export default function CheckoutPage({ session }) {
+export default function CheckoutPage({ session, products }) {
+  const [formError, setFormError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [billingData, setBillingData] = useState({});
   const [shippingMethod, setShippingMethod] = useState("standard");
-  const [paymentMethod, setPaymentMethod] = useState("card");
-  const router = useRouter();
+  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const shippingCosts = {
+    standard: 5.99,
+    express: 12.99,
+    overnight: 24.99,
+  };
+
+  const subtotal = products.reduce(
+    (sum, product) => sum + product.price * product.quantity,
+    0
+  );
+
+  const shippingCost = shippingCosts[shippingMethod] || 5.99;
+  const tax = subtotal * 0.07;
+  const total = subtotal + shippingCost + tax;
 
   const handlePlaceOrder = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("billingData:", billingData);
-    console.log("shippingMethod:", shippingMethod);
-    console.log("paymentMethod:", paymentMethod);
+    if (
+      !billingData?.firstName ||
+      !billingData?.lastName ||
+      !billingData?.email ||
+      !billingData?.countryCode ||
+      !billingData?.phone ||
+      !billingData?.address ||
+      !billingData?.city ||
+      !billingData?.country ||
+      !billingData?.postalCode
+    ) {
+      setFormError(true);
+    } else {
+      setFormError(false);
+      try {
+        const res = await createOrder(
+          {
+            ...billingData,
+            shippingMethod,
+            paymentMethod,
+            amount: Number(total?.toFixed(2)),
+            products,
+          },
+          "userId"
+        );
+        if (res?.error) {
+          toast.error(res?.error);
+          setIsLoading(false);
+        } else {
+          toast.success("Order Placed");
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
+    }
+
     setIsLoading(false);
   };
 
@@ -87,6 +136,7 @@ export default function CheckoutPage({ session }) {
                 </CardHeader>
                 <CardContent>
                   <BillingForm
+                    formError={formError}
                     onDataChange={setBillingData}
                     session={session}
                   />
@@ -143,7 +193,13 @@ export default function CheckoutPage({ session }) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <OrderSummary shippingMethod={shippingMethod} />
+                  <OrderSummary
+                    products={products}
+                    tax={tax}
+                    shippingCost={shippingCost}
+                    subtotal={subtotal}
+                    total={total}
+                  />
                   <Separator />
                   <Button
                     className="w-full h-12 text-lg font-semibold bg-primary hover:bg-primary/90 shadow-lg"

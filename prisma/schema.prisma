@@ -76,12 +76,44 @@ model brand {
 
 model cart {
   id        Int      @id @default(autoincrement())
-  userId    Int     
+  userId    Int
   productId Int
   brandId   Int
   color     String
   size      String
   quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model order {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  address        String
+  amount         Float
+  city           String
+  country        String
+  countryCode    String
+  email          String
+  firstName      String
+  lastName       String
+  paymentMethod  String
+  paymentStatus  Boolean
+  phone          String
+  postalCode     String
+  shippingMethod String
+  status         String
+  products       Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model review {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  rating    Int
+  comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

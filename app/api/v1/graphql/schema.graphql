@@ -57,6 +57,60 @@ type Product {
   updatedAt: String
 }
 
+type ProductForOrder {
+  brand: String!
+  color: String!
+  id: String!
+  image: String!
+  name: String!
+  price: Float!
+  quantity: Int!
+  size: String!
+}
+
+input ProductInput {
+  brand: String!
+  color: String!
+  id: String!
+  image: String!
+  name: String!
+  price: Float!
+  quantity: Int!
+  size: String!
+}
+
+type Review {
+  id: ID!
+  userId: ID!
+  productId: ID!
+  rating: Int!
+  comment: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Order {
+  id: ID!
+  userId: ID!
+  address: String!
+  amount: Float!
+  city: String!
+  country: String!
+  countryCode: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+  paymentMethod: String!
+  paymentStatus: Boolean!
+  phone: String!
+  postalCode: String!
+  shippingMethod: String!
+  status: String!
+  products: [ProductForOrder!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Query {
   me(token: String!): User
   isValidResetUrl(token: String!, tokenId: String!): Boolean
@@ -71,6 +125,7 @@ type Query {
   ): [Product]
   product(id: ID!): Product
   carts: [cart]
+  getReviewByProduct(id: ID!): [Review]
 }
 
 type Mutation {
@@ -123,4 +178,20 @@ type Mutation {
   addToCart(productId: ID!, quantity: Int!, color: String!, size: String!): cart
   removeFromCart(id: ID!): Boolean
   updateCart(id: ID!, quantity: Int!): cart
+  createOrder(
+    address: String!
+    amount: Float!
+    city: String!
+    country: String!
+    countryCode: String!
+    email: String!
+    firstName: String!
+    lastName: String!
+    paymentMethod: String!
+    phone: String!
+    postalCode: String!
+    shippingMethod: String!
+    products: [ProductInput!]!
+  ): Order!
+  createReview(rating: Int!, comment: String!, productId: ID!): Review!
 }

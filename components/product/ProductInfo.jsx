@@ -17,8 +17,8 @@ import addToCart from "@/graphql/mutation/addToCart";
 function ProductInfo({ product, isAlreadyInCart = false }) {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedSize, setSelectedSize] = useState(product.size[0]);
-  const [selectedColor, setSelectedColor] = useState(product?.color[0]);
+  const [selectedSize, setSelectedSize] = useState(product.size?.[0]);
+  const [selectedColor, setSelectedColor] = useState(product?.color?.[0]);
   const router = useRouter();
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
@@ -58,6 +58,16 @@ function ProductInfo({ product, isAlreadyInCart = false }) {
         setIsLoading(false);
       }
     }
+  };
+
+  const handleCheckout = () => {
+    router.push(
+      `/checkout?product=${
+        product?.id
+      }&quantity=${quantity}&color=${selectedColor?.slice(
+        1
+      )}&size=${selectedSize?.trim()}`
+    );
   };
 
   return (
@@ -186,7 +196,11 @@ function ProductInfo({ product, isAlreadyInCart = false }) {
               "Add to Cart"
             )}
           </Button>
-          <Button disabled={product?.stock <= 0} className="flex-1">
+          <Button
+            onClick={handleCheckout}
+            disabled={product?.stock <= 0}
+            className="flex-1"
+          >
             Buy Now
           </Button>
         </div>

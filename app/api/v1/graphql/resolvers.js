@@ -1,6 +1,7 @@
 import UserService from "@/services/user";
 import BrandService from "@/services/brands";
 import ProductService from "@/services/product";
+import OrderService from "@/services/order";
 
 export const resolvers = {
   Query: {
@@ -44,6 +45,10 @@ export const resolvers = {
       await new UserService().isAuthenticated({ token });
       const cart = await new ProductService().carts({ token });
       return cart;
+    },
+    getReviewByProduct: async (_, { id }) => {
+      const data = await new ProductService().getReviewByProduct({ id });
+      return data;
     },
   },
   Mutation: {
@@ -207,6 +212,54 @@ export const resolvers = {
         quantity,
       });
       return updateCart;
+    },
+    createOrder: async (
+      _,
+      {
+        address,
+        amount,
+        city,
+        country,
+        countryCode,
+        email,
+        firstName,
+        lastName,
+        paymentMethod,
+        phone,
+        postalCode,
+        shippingMethod,
+        products,
+      },
+      { token }
+    ) => {
+      await new UserService().isAuthenticated({ token });
+      const data = await new OrderService().createOrder(
+        {
+          address,
+          amount,
+          city,
+          country,
+          countryCode,
+          email,
+          firstName,
+          lastName,
+          paymentMethod,
+          phone,
+          postalCode,
+          shippingMethod,
+          products,
+        },
+        { token }
+      );
+      return data;
+    },
+    createReview: async (_, { productId, comment, rating }, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const data = await new ProductService().reviewProduct(
+        { productId, comment, rating },
+        { token }
+      );
+      return data;
     },
   },
 };

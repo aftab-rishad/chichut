@@ -4,49 +4,13 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-export default function OrderSummary({ shippingMethod }) {
-  const products = [
-    {
-      id: 1,
-      name: "Wireless Bluetooth Headphones",
-      vendor: "TechStore",
-      price: 89.99,
-      quantity: 1,
-      image: "/placeholder.svg",
-    },
-    {
-      id: 2,
-      name: "Smart Fitness Watch",
-      vendor: "FitGear",
-      price: 199.99,
-      quantity: 1,
-      image: "/placeholder.svg",
-    },
-    {
-      id: 3,
-      name: "USB-C Charging Cable",
-      vendor: "TechStore",
-      price: 19.99,
-      quantity: 2,
-      image: "/placeholder.svg",
-    },
-  ];
-
-  const subtotal = products.reduce(
-    (sum, product) => sum + product.price * product.quantity,
-    0
-  );
-
-  const shippingCosts = {
-    standard: 5.99,
-    express: 12.99,
-    overnight: 24.99,
-  };
-
-  const shippingCost = shippingCosts[shippingMethod] || 5.99;
-  const tax = subtotal * 0.07;
-  const total = subtotal + shippingCost + tax;
-
+export default function OrderSummary({
+  products = [],
+  shippingCost,
+  subtotal,
+  tax,
+  total,
+}) {
   return (
     <div className="space-y-4">
       {/* Products */}
@@ -76,7 +40,7 @@ export default function OrderSummary({ shippingMethod }) {
                 {product.name}
               </h4>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                by {product.vendor}
+                by {product.brand}
               </p>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">
                 ${(product.price * product.quantity).toFixed(2)}

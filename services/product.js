@@ -267,6 +267,83 @@ class ProductService {
       throw new Error(error.message);
     }
   }
+  async reviewProduct({ productId, comment, rating }, { token }) {
+    try {
+      const userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
+      const product = await this.db.product.findUnique({
+        where: {
+          id: Number(productId),
+        },
+      });
+      const brand = await this.db.brand.findUnique({
+        where: { userId: Number(userId) },
+      });
+      const orders = await this.db.order.findMany({
+        where: {
+          userId: Number(userId),
+        },
+      });
+      const orderProductIds = orders.map((order) => {
+        const matchingProduct = order.products?.find(
+          (p) => Number(p.id) === Number(product?.id)
+        );
+        return {
+          id: matchingProduct?.id || false,
+        };
+      })[0];
+      const allMyReview = await this.db.review.findMany({
+        where: {
+          userId: Number(userId),
+        },
+      });
+      const alreadyReviewDone = allMyReview.find(
+        (r) => Number(r?.productId) === Number(product?.id)
+      );
+      if (!product) {
+        throw new Error("Product not found!");
+      } else if (brand && brand?.name === product?.brand) {
+        throw new Error("Sorry, you're not able to review your own product.");
+      } else if (!orderProductIds?.id) {
+        throw new Error("Sorry, you can't submit a review for this product.");
+      } else if (alreadyReviewDone) {
+        throw new Error("You've already reviewed this product.");
+      } else if (Number(rating) < 1 || Number(rating) > 5) {
+        throw new Error("Ratings must be between 1 and 5.");
+      } else {
+        const data = await this.db.review.create({
+          data: {
+            userId: Number(userId),
+            productId: Number(productId),
+            rating: Number(rating),
+            comment,
+          },
+        });
+        return data;
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  async getReviewByProduct({ id }) {
+    try {
+      const product = await this.db.product.findUnique({
+        where: { id: Number(id) },
+      });
+      if (!product) {
+        throw new Error("Product not found!");
+      } else {
+        const review = await this.db.review.findMany({
+          where: {
+            productId: Number(id),
+          },
+        });
+        return review;
+      }
+    } catch (error) {
+      throw new Error(error.message);
+      console.log(error.message);
+    }
+  }
 }
 
 export default ProductService;

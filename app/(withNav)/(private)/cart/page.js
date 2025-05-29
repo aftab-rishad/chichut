@@ -22,8 +22,8 @@ export default async function CartPage() {
   let allProducts;
 
   try {
-    allCarts = await carts("id color size quantity productId createdAt");
-    allProducts = await getProducts(`id name price images stock`, {});
+    allCarts = await carts("id color size quantity productId");
+    allProducts = await getProducts(`id name price discount images stock`, {});
   } catch (error) {
     console.log("Error fetching cart items:", error);
   }
@@ -32,13 +32,12 @@ export default async function CartPage() {
     return {
       id: cart?.id,
       name: product?.name,
-      price: product?.price,
+      price: Number(product?.price) - Number(product?.discount || 0),
       quantity: cart?.quantity,
       image: product?.images?.[0],
       color: cart?.color,
       size: cart?.size,
       stock: product?.stock,
-      createdAt: cart?.createdAt,
     };
   });
 
