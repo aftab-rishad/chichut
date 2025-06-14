@@ -23,6 +23,20 @@ type cart {
   updatedAt: String
 }
 
+enum sender {
+  client
+  vendor
+}
+
+type Room {
+  id: ID!
+  vendorId: ID!
+  clientId: ID!
+  unread: Int!
+  unreadFor: sender!
+  createdAt: String!
+}
+
 type ResetPasswordEmail {
   userId: ID
   token: String
@@ -128,6 +142,7 @@ type Query {
   carts: [cart]
   getReviewByProduct(id: ID!): [Review]
   orders: [Order]
+  rooms(id: ID!, roomFor: sender!): [Room!]!
 }
 
 type Mutation {
@@ -196,4 +211,5 @@ type Mutation {
     products: [ProductInput!]!
   ): Order!
   createReview(rating: Int!, comment: String!, productId: ID!): Review!
+  createRoom(vendorId: ID!): Room!
 }

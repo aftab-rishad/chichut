@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, ShoppingBag, Heart, Menu } from "lucide-react";
+import { Search, ShoppingBag, Menu, MessageCircleMore } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -354,10 +354,12 @@ export default function Navbar({ session, brand }) {
 
           <div className="flex items-center">
             {/* Wishlist - Desktop */}
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <Heart className="h-5 w-5" />
-              <span className="sr-only">Wishlist</span>
-            </Button>
+            <Link href="/chat">
+              <Button variant="ghost" size="icon" className="hidden md:flex">
+                <MessageCircleMore className="h-5 w-5" />
+                <span className="sr-only">Wishlist</span>
+              </Button>
+            </Link>
 
             {/* Cart */}
             <Link href="/cart" className="relative">

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import {
-  BarChart3,
+  MessageCircleMore,
   CreditCard,
   Home,
   Package,
@@ -31,14 +31,22 @@ function MobileSidebar({ id }) {
       badge: "0",
     },
     { name: "Customers", href: "#", icon: Users },
-    { name: "Analytics", href: "#", icon: BarChart3 },
+    {
+      name: "Messages",
+      href: `/seller/${id}/dashboard/chat`,
+      icon: MessageCircleMore,
+    },
     { name: "Payments", href: "#", icon: CreditCard },
     { name: "Settings", href: "#", icon: Settings },
   ];
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden m-5">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden absolute left-0 mx-2 mt-10"
+        >
           <Menu className="h-5 w-5" />
           <span className="sr-only">Open menu</span>
         </Button>

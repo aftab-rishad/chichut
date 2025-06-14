@@ -16,6 +16,7 @@ import addToCart from "@/graphql/mutation/addToCart";
 
 function ProductInfo({
   product,
+  isMyProduct,
   isAlreadyInCart = false,
   averageRating = 0,
   reviewCount,
@@ -189,7 +190,7 @@ function ProductInfo({
         <div className="flex flex-col sm:flex-row gap-4 pt-4">
           <Button
             className="flex-1"
-            disabled={product?.stock <= 0 || isLoading}
+            disabled={product?.stock <= 0 || isLoading || isMyProduct}
             onClick={handleAddToCart}
             variant="outline"
           >
@@ -203,7 +204,7 @@ function ProductInfo({
           </Button>
           <Button
             onClick={handleCheckout}
-            disabled={product?.stock <= 0}
+            disabled={product?.stock <= 0 || isLoading || isMyProduct}
             className="flex-1"
           >
             Buy Now

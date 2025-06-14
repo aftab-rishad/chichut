@@ -31,7 +31,7 @@ async function DashboardLayout({ children, params: { id } }) {
     <div className="flex h-screen overflow-hidden">
       <DesktopSidebar id={id} />
       <MobileSidebar id={id} />
-      <div className="overflow-y-auto w-full py-10 px-0 mr-5 md:mr-0 md:px-10">
+      <div className="overflow-y-auto w-full py-10 px-2 md:px-10">
         {children}
       </div>
     </div>

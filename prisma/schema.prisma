@@ -118,3 +118,25 @@ model review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model room {
+  id        Int      @id @default(autoincrement())
+  vendorId  Int
+  clientId  Int
+  unread    Int      @default(0)
+  unreadFor sender   @default(vendor)
+  createdAt DateTime @default(now())
+}
+
+model message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  roomId    Int
+  sender    sender
+  createdAt DateTime @default(now())
+}
+
+enum sender {
+  client
+  vendor
+}

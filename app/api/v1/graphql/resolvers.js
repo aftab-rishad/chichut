@@ -2,6 +2,7 @@ import UserService from "@/services/user";
 import BrandService from "@/services/brands";
 import ProductService from "@/services/product";
 import OrderService from "@/services/order";
+import ChatService from "@/services/chat";
 
 export const resolvers = {
   Query: {
@@ -52,6 +53,11 @@ export const resolvers = {
     },
     orders: async () => {
       const data = await new OrderService().orders();
+      return data;
+    },
+    rooms: async (_, { id, roomFor }, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const data = await new ChatService().rooms({ id, roomFor });
       return data;
     },
   },
@@ -263,6 +269,11 @@ export const resolvers = {
         { productId, comment, rating },
         { token }
       );
+      return data;
+    },
+    createRoom: async (_, { vendorId }, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const data = await new ChatService().createRoom({ token, vendorId });
       return data;
     },
   },

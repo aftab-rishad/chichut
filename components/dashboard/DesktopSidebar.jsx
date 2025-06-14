@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  BarChart3,
+  MessageCircleMore,
   ChevronDown,
   CreditCard,
   Home,
@@ -36,7 +36,11 @@ async function DesktopSidebar({ id }) {
       icon: ShoppingCart,
     },
     { name: "Customers", href: "#", icon: Users },
-    { name: "Analytics", href: "#", icon: BarChart3 },
+    {
+      name: "Messages",
+      href: `/seller/${id}/dashboard/chat`,
+      icon: MessageCircleMore,
+    },
     { name: "Payments", href: "#", icon: CreditCard },
     { name: "Settings", href: "#", icon: Settings },
   ];

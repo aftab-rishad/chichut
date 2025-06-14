@@ -3,6 +3,7 @@ import getProductById from "@/graphql/query/product";
 import brand from "@/graphql/query/brand";
 import carts from "@/graphql/query/carts";
 import getReviewByProduct from "@/graphql/query/getReviewByProduct";
+import me from "@/graphql/query/me";
 
 const ProductGallery = dynamic(
   () => import("@/components/product/ProductGallery"),
@@ -68,6 +69,8 @@ export default async function ProductPage({ id }) {
   let product;
   let vendor;
   let allCarts;
+  let session;
+  let myBrand;
 
   const reviews = await getReviewByProduct({ id }, "rating");
   const averageRating =
@@ -85,7 +88,8 @@ export default async function ProductPage({ id }) {
       "id name image email location"
     );
     allCarts = await carts("productId");
-    console.log("Carts Data:", allCarts);
+    session = await me("id");
+    myBrand = await brand({ userId: Number(session?.id) }, "name");
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -93,14 +97,14 @@ export default async function ProductPage({ id }) {
   const isAlreadyInCart =
     allCarts?.find((cart) => cart.productId === id)?.productId === id;
 
-  console.log("isAlreadyInCart:", isAlreadyInCart);
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <ProductGallery images={product?.images} />
         <ProductInfo
           product={product}
+          vendor={vendor}
+          isMyProduct={vendor?.name === myBrand?.name}
           isAlreadyInCart={isAlreadyInCart}
           averageRating={averageRating}
           reviewCount={reviews?.length}
@@ -110,7 +114,7 @@ export default async function ProductPage({ id }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         {/* Vendor Details */}
         <div className="md:col-span-1">
-          <VendorDetails vendor={vendor} />
+          <VendorDetails vendor={vendor} id={id} />
         </div>
 
         {/* Additional Info */}
