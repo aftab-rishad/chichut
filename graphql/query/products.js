@@ -5,7 +5,7 @@ import { getGraphQLClient } from "@/lib/graphqlClient";
 
 const getProducts = async (
   req,
-  { priceStart, priceEnd, category, subCategory }
+  { priceStart, priceEnd, category, subCategory, page }
 ) => {
   const getProductsQuery = gql`
     query GetProducts(

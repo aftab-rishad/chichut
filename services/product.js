@@ -214,9 +214,10 @@ class ProductService {
   }
   async carts({ token }) {
     try {
-      const userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
       const carts = await this.db.cart.findMany({
-        where: { userId: Number(userId) },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
       return carts;
     } catch (error) {

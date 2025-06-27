@@ -1,15 +1,19 @@
 import { notFound } from "next/navigation";
 import me from "@/graphql/query/me";
 import brandQuery from "@/graphql/query/brand";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 
-const AuthPage = dynamic(() => import("@/components/auth/AuthPage"));
-const CreateSeller = dynamic(() => import("@/components/auth/CreateSeller"));
+const AuthPage = dynamicImport(() => import("@/components/auth/AuthPage"));
+const CreateSeller = dynamicImport(() =>
+  import("@/components/auth/CreateSeller")
+);
 
 export const metadata = {
   title: "Become a ChicHut seller",
   description: "Create a seller account",
 };
+
+export const dynamic = "force-dynamic";
 
 async function CreateSellerPage() {
   const session = await me("id");

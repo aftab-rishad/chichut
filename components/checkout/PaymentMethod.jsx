@@ -1,26 +1,10 @@
-"use client";
-
-import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { CreditCard, Banknote } from "lucide-react";
+import { Banknote } from "lucide-react";
 
 export default function PaymentMethod({ selectedMethod, onMethodChange }) {
-  const [cardData, setCardData] = useState({
-    number: "",
-    expiry: "",
-    cvv: "",
-    name: "",
-  });
-
   const paymentOptions = [
-    {
-      id: "card",
-      name: "Credit/Debit Card",
-      description: "Visa, Mastercard, American Express",
-      icon: CreditCard,
-    },
     {
       id: "cod",
       name: "Cash on Delivery",

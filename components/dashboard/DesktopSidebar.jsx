@@ -1,30 +1,70 @@
+"use client";
+
 import Link from "next/link";
 import {
   MessageCircleMore,
-  ChevronDown,
   CreditCard,
   Home,
-  LogOut,
   Package,
   Settings,
   ShoppingCart,
   Users,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import me from "@/graphql/query/me";
 
-async function DesktopSidebar({ id }) {
+import { Badge } from "../ui/badge";
+import { useEffect, useState } from "react";
+import { socket } from "@/lib/socket";
+
+function DesktopSidebar({ id }) {
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
+  useEffect(() => {
+    const handleConnect = () => {
+      console.log("Connected to socket server");
+    };
+    const handleDisconnect = () => {
+      console.log("Disconnected from socket server");
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+
+    socket.emit("join-room", {
+      roomId: `${id}-vendor`,
+    });
+
+    socket.emit("old-unread", {
+      id: id,
+      unreadFor: "vendorId",
+    });
+
+    socket.on("unread-message", ({ unread }) => {
+      const audio = new Audio("/sounds/notification.mp3");
+      audio.play().catch((err) => {
+        console.error("Error playing notification sound:", err);
+      });
+      setUnreadMessages((prev) => prev + unread);
+    });
+    socket.on("old-unread", ({ unreadMessages }) => {
+      setUnreadMessages(unreadMessages.unreadVendor || 0);
+    });
+
+    socket.on("clean-unread", ({ unreadFor, prevUnread }) => {
+      if (unreadFor === "unreadVendor") {
+        setUnreadMessages((prev) => prev - prevUnread);
+      }
+    });
+
+    return () => {
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("old-unread");
+      socket.off("unread-message");
+      socket.off("clean-unread");
+    };
+  }, []);
+
   const navigation = [
-    { name: "Dashboard", href: `/seller/${id}/dashboard`, icon: Home },
     {
       name: "Products",
       href: `/seller/${id}/dashboard/products`,
@@ -32,20 +72,16 @@ async function DesktopSidebar({ id }) {
     },
     {
       name: "Orders",
-      href: "#",
+      href: `/seller/${id}/dashboard/orders`,
       icon: ShoppingCart,
     },
-    { name: "Customers", href: "#", icon: Users },
+
     {
       name: "Messages",
       href: `/seller/${id}/dashboard/chat`,
       icon: MessageCircleMore,
     },
-    { name: "Payments", href: "#", icon: CreditCard },
-    { name: "Settings", href: "#", icon: Settings },
   ];
-
-  const user = await me("firstName lastName email");
 
   return (
     <>
@@ -74,50 +110,14 @@ async function DesktopSidebar({ id }) {
                 >
                   <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
                   <span className="flex-1">{item.name}</span>
+                  {item.name === "Messages" && unreadMessages > 0 && (
+                    <Badge className="bg-red-500 font-bold text-xs rounded-full w-5 h-5">
+                      {unreadMessages}
+                    </Badge>
+                  )}
                 </Link>
               ))}
             </nav>
-          </div>
-          <div className="flex-shrink-0 flex border-t border-border p-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center w-full px-3 py-2 text-sm"
-                >
-                  <div className="flex items-center flex-1">
-                    <Avatar className="h-8 w-8 mr-3">
-                      <AvatarImage src="/placeholder-user.jpg" alt="User" />
-                      <AvatarFallback>
-                        {user?.firstName[0]}
-                        {user?.lastName[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col text-left">
-                      <span className="font-medium">
-                        {user?.firstName} {user?.lastName}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {user?.email}
-                      </span>
-                    </div>
-                  </div>
-                  <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
       </div>

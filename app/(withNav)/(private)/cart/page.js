@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import dynamic from "next/dynamic";
+import dynamicNext from "next/dynamic";
 import { EmptyCart } from "@/components/cart/EmptyCart";
 import carts from "@/graphql/query/carts";
 import getProducts from "@/graphql/query/products";
+import me from "@/graphql/query/me";
 
-const CartItem = dynamic(() => import("@/components/cart/CartItem"), {
+const CartItem = dynamicNext(() => import("@/components/cart/CartItem"), {
   ssr: false,
 });
-const CartSummary = dynamic(() => import("@/components/cart/CartSummary"), {
+const CartSummary = dynamicNext(() => import("@/components/cart/CartSummary"), {
   ssr: false,
 });
 
@@ -17,17 +18,23 @@ export const metadata = {
   description: "View and manage your shopping cart items",
 };
 
-export default async function CartPage() {
-  let allCarts;
-  let allProducts;
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
-  try {
-    allCarts = await carts("id color size quantity productId");
-    allProducts = await getProducts(`id name price discount images stock`, {});
-  } catch (error) {
-    console.log("Error fetching cart items:", error);
-  }
-  const cartItems = allCarts?.map((cart) => {
+export default async function CartPage() {
+  const allCarts = await carts("id color size quantity productId userId");
+  const session = await me("id");
+
+  const myCart = allCarts?.filter(
+    (cart) => Number(cart?.userId) === Number(session?.id)
+  );
+
+  const allProducts = await getProducts(
+    `id name price discount images stock`,
+    {}
+  );
+
+  const cartItems = myCart?.map((cart) => {
     const product = allProducts?.find((p) => p?.id === cart?.productId);
     return {
       id: cart?.id,

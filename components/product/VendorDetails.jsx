@@ -1,11 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { MessageCircleIcon } from "lucide-react";
 import { Verified } from "../common/Svg";
-import Link from "next/link";
 import brand from "@/graphql/query/brand";
 import me from "@/graphql/query/me";
+import ChatWithVendorBtn from "./ChatWithVendorBtn";
 
 async function VendorDetails({ vendor = {} }) {
   const session = await me("id");
@@ -36,16 +34,11 @@ async function VendorDetails({ vendor = {} }) {
             </div>
           </div>
           <div>
-            <Link href={vendor?.name === myBrand?.name ? "#" : `#`}>
-              <Button
-                disabled={vendor?.name === myBrand?.name}
-                className="w-full"
-                variant="outline"
-              >
-                <MessageCircleIcon className="mr-2 h-4 w-4" />
-                Chat with Vendor
-              </Button>
-            </Link>
+            <ChatWithVendorBtn
+              myBrand={myBrand}
+              vendor={vendor}
+              session={session}
+            />
           </div>
         </CardContent>
       </Card>

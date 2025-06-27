@@ -1,34 +1,15 @@
 import EmptyChat from "@/components/chat/EmptyChat";
 import ChatList from "@/components/chat/ChatList";
+import getRooms from "@/graphql/query/rooms";
 
-function ChatPageForVendor({ params: { id } }) {
-  const chats = [
-    {
-      id: "1",
-      name: "Sarah Chen",
-      lastMessage:
-        "Hi! I'm interested in the wireless headphones you have listed. Are they still available?",
-      timestamp: "15m",
-      unreadCount: 2,
-      isOnline: true,
-    },
-    {
-      id: "2",
-      name: "Mike Johnson",
-      lastMessage: "Is the iPhone still available?",
-      timestamp: "2h",
-      unreadCount: 0,
-      isOnline: false,
-    },
-    {
-      id: "3",
-      name: "Emma Wilson",
-      lastMessage: "Hi! I saw your laptop listing. Can we negotiate the price?",
-      timestamp: "1d",
-      unreadCount: 1,
-      isOnline: true,
-    },
-  ];
+export const dynamic = "force-dynamic";
+
+async function ChatPageForVendor({ params: { id } }) {
+  const chats = await getRooms(
+    { id, roomFor: "vendor" },
+    "clientId vendorId id"
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto max-w-2xl">
@@ -51,6 +32,7 @@ function ChatPageForVendor({ params: { id } }) {
             <div className="flex flex-col gap-2">
               {chats.map((chat) => (
                 <ChatList
+                  listOf="client"
                   key={chat?.id}
                   url={`/seller/${id}/dashboard/chat/${chat?.id}`}
                   chat={chat}

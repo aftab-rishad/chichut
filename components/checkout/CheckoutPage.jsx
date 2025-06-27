@@ -6,20 +6,24 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, CreditCard, Truck, MapPin } from "lucide-react";
-import { useRouter } from "next/navigation";
 import BillingForm from "./BillingForm";
 import ShippingMethod from "./ShippingMethod";
 import PaymentMethod from "./PaymentMethod";
 import OrderSummary from "./OrderSummary";
 import { toast } from "sonner";
 import createOrder from "@/graphql/mutation/createOrder";
+import brand from "@/graphql/query/brand";
+import { socket } from "@/lib/socket";
+import clearCart from "@/action/clearCart";
+import { useRouter } from "next/navigation";
 
-export default function CheckoutPage({ session, products }) {
+export default function CheckoutPage({ session, products, productFrom }) {
   const [formError, setFormError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [billingData, setBillingData] = useState({});
   const [shippingMethod, setShippingMethod] = useState("standard");
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const router = useRouter();
   const shippingCosts = {
     standard: 5.99,
     express: 12.99,
@@ -52,22 +56,34 @@ export default function CheckoutPage({ session, products }) {
     } else {
       setFormError(false);
       try {
-        const res = await createOrder(
-          {
-            ...billingData,
-            shippingMethod,
-            paymentMethod,
-            amount: Number(total?.toFixed(2)),
-            products,
-          },
-          "userId"
-        );
-        if (res?.error) {
-          toast.error(res?.error);
-          setIsLoading(false);
-        } else {
-          toast.success("Order Placed");
+        products.map(async (product) => {
+          const res = await createOrder(
+            {
+              ...billingData,
+              brand: product?.brand,
+              shippingMethod,
+              paymentMethod,
+              amount:
+                Number(product?.price?.toFixed(2)) * Number(product?.quantity),
+              product,
+            },
+            "userId id"
+          );
+
+          const vendor = await brand({ name: product?.brand }, "id userId");
+          socket.emit("send-notification", {
+            title: "New Order Received for Your Brand.",
+            message: `You’ve received a new order. Order ID: ${res?.id}`,
+            url: `/seller/${vendor?.id}/dashboard/orders`,
+            userId: vendor?.userId,
+          });
+        });
+        if (productFrom === "cart") {
+          await clearCart({ id: session?.id });
         }
+        router.push("/orders");
+        setIsLoading(false);
+        toast.success("Order Placed");
       } catch (error) {
         console.log(error);
         setIsLoading(false);

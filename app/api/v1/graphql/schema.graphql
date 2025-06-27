@@ -32,8 +32,8 @@ type Room {
   id: ID!
   vendorId: ID!
   clientId: ID!
-  unread: Int!
-  unreadFor: sender!
+  unreadVendor: Int!
+  unreadClient: Int!
   createdAt: String!
 }
 
@@ -82,17 +82,6 @@ type ProductForOrder {
   size: String!
 }
 
-input ProductInput {
-  brand: String!
-  color: String!
-  id: String!
-  image: String!
-  name: String!
-  price: Float!
-  quantity: Int!
-  size: String!
-}
-
 type Review {
   id: ID!
   user: User!
@@ -104,9 +93,21 @@ type Review {
   updatedAt: String!
 }
 
+input ProductInput {
+  brand: String!
+  color: String!
+  id: String!
+  image: String!
+  name: String!
+  price: Float!
+  quantity: Int!
+  size: String!
+}
+
 type Order {
   id: ID!
   userId: ID!
+  brand: String!
   address: String!
   amount: Float!
   city: String!
@@ -121,7 +122,7 @@ type Order {
   postalCode: String!
   shippingMethod: String!
   status: String!
-  products: [ProductForOrder!]!
+  product: ProductForOrder!
   createdAt: String!
   updatedAt: String!
 }
@@ -143,6 +144,9 @@ type Query {
   getReviewByProduct(id: ID!): [Review]
   orders: [Order]
   rooms(id: ID!, roomFor: sender!): [Room!]!
+  roomById(id: ID!): Room!
+  roomByIds(clientId: ID!, vendorId: ID!): Room!
+  user(id: ID!): User!
 }
 
 type Mutation {
@@ -197,6 +201,7 @@ type Mutation {
   updateCart(id: ID!, quantity: Int!): cart
   createOrder(
     address: String!
+    brand: String!
     amount: Float!
     city: String!
     country: String!
@@ -208,7 +213,7 @@ type Mutation {
     phone: String!
     postalCode: String!
     shippingMethod: String!
-    products: [ProductInput!]!
+    product: ProductInput!
   ): Order!
   createReview(rating: Int!, comment: String!, productId: ID!): Review!
   createRoom(vendorId: ID!): Room!

@@ -1,7 +1,7 @@
 import ProductPage from "@/components/product/ProductPage";
 import getProductById from "@/graphql/query/product";
 import { notFound } from "next/navigation";
-
+export const dynamic = "force-dynamic";
 async function Product({ params: { id } }) {
   let product;
   try {

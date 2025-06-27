@@ -2,8 +2,8 @@ import dynamic from "next/dynamic";
 import getProductById from "@/graphql/query/product";
 import brand from "@/graphql/query/brand";
 import carts from "@/graphql/query/carts";
-import getReviewByProduct from "@/graphql/query/getReviewByProduct";
 import me from "@/graphql/query/me";
+import getReviewByProduct from "@/graphql/query/getReviewByProduct";
 
 const ProductGallery = dynamic(
   () => import("@/components/product/ProductGallery"),
@@ -71,6 +71,7 @@ export default async function ProductPage({ id }) {
   let allCarts;
   let session;
   let myBrand;
+  let myCarts;
 
   const reviews = await getReviewByProduct({ id }, "rating");
   const averageRating =
@@ -87,15 +88,20 @@ export default async function ProductPage({ id }) {
       { name: product?.brand },
       "id name image email location"
     );
-    allCarts = await carts("productId");
+    allCarts = await carts("productId userId");
     session = await me("id");
+    myCarts = allCarts?.filter(
+      (cart) => Number(cart?.userId) === Number(session?.id)
+    );
+
     myBrand = await brand({ userId: Number(session?.id) }, "name");
   } catch (error) {
     console.error("Error fetching data:", error);
   }
 
   const isAlreadyInCart =
-    allCarts?.find((cart) => cart.productId === id)?.productId === id;
+    myCarts?.find((cart) => Number(cart.productId) === Number(id))
+      ?.productId === id;
 
   return (
     <div className="container mx-auto px-4 py-8">

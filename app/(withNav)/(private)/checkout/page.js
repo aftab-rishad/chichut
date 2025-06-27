@@ -1,16 +1,16 @@
 import me from "@/graphql/query/me";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { notFound } from "next/navigation";
 import carts from "@/graphql/query/carts";
 import getProducts from "@/graphql/query/products";
 
-const CheckoutPage = dynamic(
+const CheckoutPage = dynamicImport(
   () => import("@/components/checkout/CheckoutPage"),
   {
     ssr: false,
   }
 );
-
+export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Checkout",
   description: "Complete your purchase",
@@ -18,6 +18,8 @@ export const metadata = {
 
 export default async function CheckoutPageRoute({ searchParams }) {
   const { product, quantity } = searchParams;
+  const session = await me("id firstName lastName email");
+
   if (!product) notFound();
   if (
     (product !== "cart" && !quantity) ||
@@ -29,13 +31,16 @@ export default async function CheckoutPageRoute({ searchParams }) {
   let products = [];
 
   try {
-    const allCarts = await carts("id color size quantity productId");
+    const allCarts = await carts("id color size quantity productId userId");
+    const myCarts = allCarts?.filter(
+      (cart) => Number(cart?.userId) === Number(session?.id)
+    );
     const allProducts = await getProducts(
       `id name price color size discount brand images stock`,
       {}
     );
     if (product === "cart") {
-      products = allCarts?.map((cart) => {
+      products = myCarts?.map((cart) => {
         const product = allProducts?.find((p) => p?.id === cart?.productId);
         return {
           id: product?.id,
@@ -80,10 +85,13 @@ export default async function CheckoutPageRoute({ searchParams }) {
     notFound();
   }
 
-  const session = await me("id firstName lastName email");
   return (
     <>
-      <CheckoutPage session={session} products={products} />
+      <CheckoutPage
+        productFrom={product}
+        session={session}
+        products={products}
+      />
     </>
   );
 }

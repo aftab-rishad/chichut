@@ -1,34 +1,15 @@
 import EmptyChat from "@/components/chat/EmptyChat";
 import ChatList from "@/components/chat/ChatList";
+import me from "@/graphql/query/me";
+import getRooms from "@/graphql/query/rooms";
+export const dynamic = "force-dynamic";
+async function ChatPage() {
+  const session = await me("id");
+  const chats = await getRooms(
+    { id: session?.id, roomFor: "client" },
+    "vendorId clientId id"
+  );
 
-function ChatPage() {
-  const chats = [
-    {
-      id: "1",
-      name: "Sarah Chen",
-      lastMessage:
-        "Hi! I'm interested in the wireless headphones you have listed. Are they still available?",
-      timestamp: "15m",
-      unreadCount: 2,
-      isOnline: true,
-    },
-    {
-      id: "2",
-      name: "Mike Johnson",
-      lastMessage: "Is the iPhone still available?",
-      timestamp: "2h",
-      unreadCount: 0,
-      isOnline: false,
-    },
-    {
-      id: "3",
-      name: "Emma Wilson",
-      lastMessage: "Hi! I saw your laptop listing. Can we negotiate the price?",
-      timestamp: "1d",
-      unreadCount: 1,
-      isOnline: true,
-    },
-  ];
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto max-w-2xl">
@@ -51,7 +32,12 @@ function ChatPage() {
           ) : (
             <div className="flex flex-col gap-2">
               {chats.map((chat) => (
-                <ChatList url={`/chat/${chat.id}`} key={chat?.id} chat={chat} />
+                <ChatList
+                  listOf="vendor"
+                  url={`/chat/${chat.id}`}
+                  key={chat?.id}
+                  chat={chat}
+                />
               ))}
             </div>
           )}

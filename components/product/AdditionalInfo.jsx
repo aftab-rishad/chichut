@@ -42,15 +42,16 @@ export default async function AdditionalInfo({ product }) {
   const alreadyReviewDone = reviews.find(
     (r) => Number(r?.user?.id) === Number(session?.id)
   );
-  const orders = await getAllOrders(`userId products {
+  const orders = await getAllOrders(`userId product {
       id
     }`);
   const myOrders = orders?.filter(
     (order) => Number(order?.userId) === Number(session?.id)
   );
-  const orderProductIds = myOrders
-    .flatMap((order) => order.products || [])
-    .find((p) => p?.id && Number(p.id) === Number(product?.id));
+
+  const orderProductIds = myOrders?.find(
+    (o) => Number(o.product?.id) === Number(product?.id)
+  );
 
   return (
     <Card>

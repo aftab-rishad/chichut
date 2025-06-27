@@ -87,8 +87,9 @@ model cart {
 }
 
 model order {
-  id             Int      @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   userId         Int
+  brand          String
   address        String
   amount         Float
   city           String
@@ -102,10 +103,10 @@ model order {
   phone          String
   postalCode     String
   shippingMethod String
-  status         String
-  products       Json
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  status         orderStatus
+  product        Json
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
 
 model review {
@@ -120,12 +121,12 @@ model review {
 }
 
 model room {
-  id        Int      @id @default(autoincrement())
-  vendorId  Int
-  clientId  Int
-  unread    Int      @default(0)
-  unreadFor sender   @default(vendor)
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  vendorId     Int
+  clientId     Int
+  unreadVendor Int      @default(0)
+  unreadClient Int      @default(0)
+  createdAt    DateTime @default(now())
 }
 
 model message {
@@ -136,7 +137,24 @@ model message {
   createdAt DateTime @default(now())
 }
 
+model notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  message   String
+  url       String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
 enum sender {
   client
   vendor
+}
+
+enum orderStatus {
+  Processing
+  Shipped
+  Delivered
+  Cancelled
 }

@@ -17,53 +17,51 @@ class OrderService {
       lastName,
       paymentMethod,
       phone,
+      brand,
       postalCode,
       shippingMethod,
-      products,
+      product,
     },
     { token }
   ) {
     try {
       const userId = await jwt.verify(token, process.env.JWT_SECRET);
-      for (const product of products) {
-        const findProduct = await this.db.product.findUnique({
-          where: { id: Number(product?.id) },
-        });
 
-        if (!findProduct) {
-          throw new Error(`Product with ID ${product?.id} not found!`);
-        } else if (Number(findProduct?.stock) < Number(product?.quantity)) {
-          throw new Error(
-            `Product with ID ${product?.id} stock is less then ${product?.quantity}`
-          );
-        }
+      const findProduct = await this.db.product.findUnique({
+        where: {
+          id: Number(product?.id),
+        },
+      });
+
+      if (!findProduct) {
+        throw new Error(`Product with ID ${product?.id} not found!`);
+      } else if (Number(findProduct?.stock) < Number(product?.quantity)) {
+        throw new Error(
+          `Product with ID ${product?.id} stock is less then ${product?.quantity}`
+        );
       }
+
       const data = await this.db.order.create({
         data: {
           address,
           userId: userId?.id,
-          amount,
+          amount: Number(amount) * 0.07 + Number(amount),
           city,
           country,
+          brand,
           countryCode,
           email,
           firstName,
           lastName,
           paymentMethod,
           paymentStatus: false,
-          status: "pending",
+          status: "Processing",
           phone,
           postalCode,
           shippingMethod,
-          products,
+          product,
         },
       });
-      if (data && products?.length > 1) {
-        const emptyCart = await this.db.cart.deleteMany({
-          where: { userId: Number(userId?.id) },
-        });
-      }
-
       return data;
     } catch (error) {
       console.log(error);

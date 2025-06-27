@@ -10,6 +10,7 @@ const createOrder = async (data, response) => {
   const createOrderMutation = gql`
     mutation CreateOrder(
       $address: String!
+      $brand: String!
       $amount: Float!
       $city: String!
       $country: String!
@@ -21,12 +22,13 @@ const createOrder = async (data, response) => {
       $phone: String!
       $postalCode: String!
       $shippingMethod: String!
-      $products: [ProductInput!]!
+      $product: ProductInput!
     ) {
       createOrder(
         address: $address
         amount: $amount
         city: $city
+        brand: $brand
         country: $country
         countryCode: $countryCode
         email: $email
@@ -36,7 +38,7 @@ const createOrder = async (data, response) => {
         phone: $phone
         postalCode: $postalCode
         shippingMethod: $shippingMethod
-        products: $products
+        product: $product
       ) {
         ${response}
       }
@@ -46,7 +48,7 @@ const createOrder = async (data, response) => {
   try {
     const result = await graphqlClient.request(createOrderMutation, data);
     revalidatePath("/", "layout");
-    return result;
+    return result?.createOrder;
   } catch (error) {
     console.error("Error creating order:", error);
     return {

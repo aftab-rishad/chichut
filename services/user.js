@@ -443,6 +443,19 @@ class UserService {
       throw new Error("Unauthorized");
     }
   }
+  async user({ id }) {
+    try {
+      const user = await this.db.user.findUnique({ where: { id: Number(id) } });
+      if (!user) {
+        throw new Error(`User not found with ID ${id}`);
+      } else {
+        return user;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error(error?.message);
+    }
+  }
 }
 
 export default UserService;

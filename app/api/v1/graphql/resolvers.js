@@ -60,6 +60,20 @@ export const resolvers = {
       const data = await new ChatService().rooms({ id, roomFor });
       return data;
     },
+    roomById: async (_, { id }, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const data = await new ChatService().roomById({ id });
+      return data;
+    },
+    roomByIds: async (_, { vendorId, clientId }, { token }) => {
+      await new UserService().isAuthenticated({ token });
+      const data = await new ChatService().roomByIds({ vendorId, clientId });
+      return data;
+    },
+    user: async (_, { id }) => {
+      const data = await new UserService().user({ id });
+      return data;
+    },
   },
   Mutation: {
     login: async (_, { email, password }) => {
@@ -227,6 +241,7 @@ export const resolvers = {
       _,
       {
         address,
+        brand,
         amount,
         city,
         country,
@@ -238,7 +253,7 @@ export const resolvers = {
         phone,
         postalCode,
         shippingMethod,
-        products,
+        product,
       },
       { token }
     ) => {
@@ -248,6 +263,7 @@ export const resolvers = {
           address,
           amount,
           city,
+          brand,
           country,
           countryCode,
           email,
@@ -257,7 +273,7 @@ export const resolvers = {
           phone,
           postalCode,
           shippingMethod,
-          products,
+          product,
         },
         { token }
       );

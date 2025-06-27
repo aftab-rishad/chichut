@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import SearchBtnHero from "./SearchHero";
 function Hero() {
   return (
     <section className="relative">
@@ -21,12 +20,7 @@ function Hero() {
             Shop the latest trends from multiple designers all in one place
           </p>
           <div className="w-full max-w-md bg-background p-2 rounded-lg flex flex-col md:flex-row gap-2">
-            <Input
-              type="search"
-              placeholder="Search products, brands..."
-              className="md:flex-1"
-            />
-            <Button className="bg-primary hover:bg-primary/90">Shop Now</Button>
+            <SearchBtnHero />
           </div>
         </div>
       </div>

@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, ShoppingBag, Menu, MessageCircleMore } from "lucide-react";
+import { Search, ShoppingBag, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import ModeToggle from "@/components/common/ModeToggle";
 import AvaterOpen from "./AvaterOpen";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -25,6 +24,9 @@ import {
 } from "@/components/ui/accordion";
 import NavAvater from "./NavAvater";
 import { Dancing_Script } from "next/font/google";
+import Notifications from "./Notifications";
+import ChatIconNav from "../chat/ChatIconNav";
+import SearchProduct from "./SearchProduct";
 
 const dancingScript = Dancing_Script({
   subsets: ["latin"],
@@ -34,55 +36,51 @@ const categories = {
   women: [
     {
       name: "Dresses",
-      href: "#",
+      href: "/products?category=women&subCategory=Dresses",
     },
     {
       name: "Tops",
-      href: "#",
+      href: "/products?category=women&subCategory=Tops",
     },
     {
       name: "Bottoms",
-      href: "#",
+      href: "/products?category=women&subCategory=Bottoms",
     },
     {
       name: "Accessories",
-      href: "#",
+      href: "/products?category=women&subCategory=Accessories",
     },
   ],
   men: [
     {
       name: "Shirts",
-      href: "#",
+      href: "/products?category=men&subCategory=Shirts",
     },
     {
       name: "Pants",
-      href: "#",
+      href: "/products?category=men&subCategory=Pants",
     },
     {
       name: "Outerwear",
-      href: "#",
+      href: "/products?category=men&subCategory=Outerwear",
     },
     {
       name: "Accessories",
-      href: "#",
+      href: "/products?category=men&subCategory=Accessories",
     },
   ],
   kids: [
     {
       name: "Boys",
-      href: "#",
+      href: "/products?category=kids&subCategory=Boys",
     },
     {
       name: "Girls",
-      href: "#",
+      href: "/products?category=kids&subCategory=Girls",
     },
     {
       name: "Baby",
-      href: "#",
-    },
-    {
-      name: "Teens",
-      href: "#",
+      href: "/products?category=kids&subCategory=Baby",
     },
   ],
 };
@@ -133,14 +131,26 @@ export default function Navbar({ session, brand }) {
                       )}
                     </div>
 
-                    <div className="relative">
-                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type="search"
-                        placeholder="Search products, brands..."
-                        className="pl-8 w-full"
-                      />
+                    <div className="relative flex space-x-2">
+                      <SearchProduct />
                     </div>
+                    {session?.email && (
+                      <div className="flex py-2 bg-border/50 px-4 rounded-md mt-4 items-center space-x-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarFallback className="bg-primary/10 text-primary">
+                            {session?.firstName[0] + session?.lastName[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                          <p className="text-sm font-medium leading-none text-foreground">
+                            {session?.firstName} {session?.lastName}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {session?.email}
+                          </p>
+                        </div>
+                      </div>
+                    )}
 
                     <Accordion type="single" collapsible className="w-full">
                       <AccordionItem value="women">
@@ -195,16 +205,10 @@ export default function Navbar({ session, brand }) {
 
                     <div className="flex flex-col space-y-3 pt-2">
                       <Link
-                        href="#"
+                        href="/brands"
                         className="text-sm font-medium hover:text-primary transition-colors"
                       >
                         Brands
-                      </Link>
-                      <Link
-                        href="#"
-                        className="text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Sale
                       </Link>
                     </div>
                     {session?.email && (
@@ -297,13 +301,8 @@ export default function Navbar({ session, brand }) {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="#" className={navigationMenuTriggerStyle()}>
+              <Link href="/brands" className={navigationMenuTriggerStyle()}>
                 Brands
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="#" className={navigationMenuTriggerStyle()}>
-                Sale
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -312,13 +311,8 @@ export default function Navbar({ session, brand }) {
         {/* Right Side Actions */}
         <div className="flex items-center gap-2 md:gap-4">
           {/* Desktop Search */}
-          <div className="hidden md:flex relative w-full max-w-sm items-center">
-            <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products, brands..."
-              className="pl-8 bg-muted/50"
-            />
+          <div className="hidden space-x-2 md:flex relative w-full max-w-sm items-center">
+            <SearchProduct />
           </div>
 
           {/* Mobile Search Toggle */}
@@ -353,14 +347,6 @@ export default function Navbar({ session, brand }) {
           </div>
 
           <div className="flex items-center">
-            {/* Wishlist - Desktop */}
-            <Link href="/chat">
-              <Button variant="ghost" size="icon" className="hidden md:flex">
-                <MessageCircleMore className="h-5 w-5" />
-                <span className="sr-only">Wishlist</span>
-              </Button>
-            </Link>
-
             {/* Cart */}
             <Link href="/cart" className="relative">
               <Button variant="ghost" size="icon">
@@ -368,7 +354,11 @@ export default function Navbar({ session, brand }) {
                 <span className="sr-only">Cart</span>
               </Button>
             </Link>
-            <ModeToggle />
+
+            {/* Message */}
+            <ChatIconNav />
+            {/* Notifications */}
+            <Notifications />
           </div>
 
           {/* Account - Mobile */}
@@ -378,14 +368,8 @@ export default function Navbar({ session, brand }) {
       {/* Mobile Search Bar - Expandable */}
       {isSearchOpen && (
         <div className="md:hidden px-4 py-2 border-t">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products, brands..."
-              className="pl-8 w-full"
-              autoFocus
-            />
+          <div className="relative flex space-x-2">
+            <SearchProduct />
           </div>
         </div>
       )}

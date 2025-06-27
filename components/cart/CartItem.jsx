@@ -74,8 +74,8 @@ function CartItem({ item }) {
       <div className="flex flex-col sm:flex-row">
         <div className="relative w-full h-40 sm:h-auto sm:w-40 bg-muted">
           <Image
-            src={item.image || "/placeholder.svg"}
-            alt={item.name}
+            src={item?.image || "/placeholder.svg"}
+            alt={item?.name}
             fill
             className="object-cover"
           />
@@ -83,22 +83,22 @@ function CartItem({ item }) {
         <div className="flex flex-col flex-1 p-4">
           <div className="flex flex-col justify-between gap-4 sm:flex-row">
             <div>
-              <h3 className="font-medium">{item.name}</h3>
+              <h3 className="font-medium">{item?.name}</h3>
               <div className="mt-1 text-sm text-muted-foreground">
                 <p className="flex items-center gap-2">
                   Color:{" "}
                   <div
                     style={{
-                      backgroundColor: item.color,
+                      backgroundColor: item?.color,
                     }}
                     className={`w-5 h-5 rounded-md items-center justify-center flex cursor-pointer transition-all duration-200 ease-in-out hover:scale-110 border border-foreground`}
                   ></div>
                 </p>
-                <p>Size: {item.size}</p>
+                <p>Size: {item?.size}</p>
               </div>
             </div>
             <div className="text-lg font-semibold">
-              ${item.price.toFixed(2)}
+              ${item?.price?.toFixed(2)}
             </div>
           </div>
 
@@ -109,7 +109,7 @@ function CartItem({ item }) {
                 size="icon"
                 className="h-8 w-8 rounded-r-none"
                 onClick={handleDecrement}
-                disabled={item.quantity <= 1 || loading}
+                disabled={item?.quantity <= 1 || loading}
               >
                 <Minus className="w-3 h-3" />
                 <span className="sr-only">Decrease quantity</span>
@@ -118,13 +118,13 @@ function CartItem({ item }) {
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  item.quantity
+                  item?.quantity
                 )}
               </div>
               <Button
                 variant="outline"
                 size="icon"
-                disabled={item.stock <= item.quantity || loading}
+                disabled={item?.stock <= item?.quantity || loading}
                 className="h-8 w-8 rounded-l-none"
                 onClick={handleIncrement}
               >

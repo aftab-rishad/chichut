@@ -110,12 +110,12 @@ function ProductInfo({
 
         <div className="flex items-baseline">
           <span className="text-2xl font-bold">
-            ${product?.price - product?.discount}
+            ${(Number(product?.price) - Number(product?.discount))?.toFixed(2)}
           </span>
           {product?.discount > 0 && (
             <>
               <span className="ml-2 text-lg text-muted-foreground line-through">
-                ${product.price}
+                ${Number(product?.price)?.toFixed(2)}
               </span>
             </>
           )}

@@ -4,11 +4,13 @@ import { getGraphQLClient } from "@/lib/graphqlClient";
 
 const getAllOrders = async (req) => {
   const graphqlClient = await getGraphQLClient();
-  const ordersQuery = gql`query Orders {
-  orders {
-    ${req}
-  }
-}`;
+  const ordersQuery = gql`
+    query Orders {
+      orders {
+        ${req}
+      }
+    }
+  `;
   try {
     const data = await graphqlClient.request(ordersQuery);
     return data?.orders;

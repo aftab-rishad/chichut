@@ -53,6 +53,9 @@ class ChatService {
         } else {
           const data = await this.db.room.findMany({
             where: { vendorId: Number(id) },
+            orderBy: {
+              createdAt: "desc",
+            },
           });
           return data;
         }
@@ -65,10 +68,43 @@ class ChatService {
         } else {
           const data = await this.db.room.findMany({
             where: { clientId: Number(id) },
+            orderBy: {
+              createdAt: "desc",
+            },
           });
           return data;
         }
       }
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
+  }
+  async roomById({ id }) {
+    try {
+      const data = await this.db.room.findUnique({
+        where: { id: Number(id) },
+      });
+      if (!data) {
+        throw new Error(`Room with ID ${id} could not be found.`);
+      }
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
+  }
+  async roomByIds({ vendorId, clientId }) {
+    try {
+      const data = await this.db.room.findFirst({
+        where: { vendorId: Number(vendorId), clientId: Number(clientId) },
+      });
+      if (!data) {
+        throw new Error(
+          `Room with Vendor ID ${vendorId} and Client ID ${clientId} could not be found.`
+        );
+      }
+      return data;
     } catch (error) {
       console.log(error);
       throw new Error(error.message);

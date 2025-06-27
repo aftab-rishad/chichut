@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { notFound } from "next/navigation";
 import isValidResetUrl from "@/graphql/query/isValidResetUrl";
 import me from "@/graphql/query/me";
@@ -9,11 +9,11 @@ export const metadata = {
   description: "Enter your new ChicHut password",
 };
 
-const AuthPage = dynamic(() => import("@/components/auth/AuthPage"));
-const ResetForm = dynamic(() => import("@/components/auth/ResetForm"));
+const AuthPage = dynamicImport(() => import("@/components/auth/AuthPage"));
+const ResetForm = dynamicImport(() => import("@/components/auth/ResetForm"));
 
 export const revalidate = 0;
-
+export const dynamic = "force-dynamic";
 async function ResetPasswordPage({ searchParams: { token, tokenId } }) {
   if (!token || !tokenId) {
     notFound();

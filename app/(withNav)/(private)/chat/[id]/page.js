@@ -1,39 +1,50 @@
 import Messages from "@/components/chat/id/Messages";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, MoreVertical } from "lucide-react";
 import Link from "next/link";
+import me from "@/graphql/query/me";
+import getRoomById from "@/graphql/query/roomById";
+import brand from "@/graphql/query/brand";
+import getUser from "@/graphql/query/user";
+export const dynamic = "force-dynamic";
+async function ChatRoomPage({ params: { id } }) {
+  const session = await me("id");
+  const chat = await getRoomById({ id }, "clientId vendorId");
+  const user = await getUser({ id: chat?.clientId }, "id firstName lastName");
+  const store = await brand(
+    { id: chat?.vendorId },
+    "id userId name image description"
+  );
 
-function ChatRoomPage() {
-  const chat = {
-    name: "Mike Johnson",
-    isOnline: false,
-    messages: [
-      {
-        id: "1",
-        content: "Is the iPhone still available?",
-        sender: "client",
-        timestamp: "12:15 PM",
-      },
-      {
-        id: "2",
-        content:
-          "Yes, it's still available. It's an iPhone 13 Pro in excellent condition.",
-        sender: "vendor",
-        timestamp: "12:45 PM",
-      },
-    ],
+  const chatInfo = {
+    id: user?.id,
+    name: store?.name,
+    image: store?.image,
+    description: store?.description,
+    vendor: {
+      id: store?.id,
+      userId: store?.userId,
+      name: store?.name,
+      image: store?.image,
+    },
+    client: {
+      id: user?.id,
+      name: `${user?.firstName} ${user?.lastName}`,
+      image: undefined,
+    },
   };
+
   const getInitials = (name) => {
     return name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+      ?.split(" ")
+      ?.map((word) => word[0])
+      ?.join("")
+      ?.toUpperCase()
+      ?.slice(0, 2);
   };
-  if (!chat) return <ChatNotFound />;
+  if (chat?.clientId !== session?.id) return <ChatNotFound />;
   return (
     <div className={`min-h-screen transition-colors duration-200`}>
       <div className="h-screen flex flex-col bg-background text-foreground">
@@ -49,15 +60,13 @@ function ChatRoomPage() {
               </Button>
             </Link>
             <Avatar className="w-10 h-10">
+              <AvatarImage src={store?.image} alt={`${store?.name} Logo`} />
               <AvatarFallback className="bg-primary/10 text-primary">
-                {getInitials(chat.name)}
+                {getInitials(store?.name)}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="font-semibold text-foreground">{chat.name}</h1>
-              <p className="text-sm text-muted-foreground">
-                {chat.isOnline ? "Online now" : "Offline"}
-              </p>
+              <h1 className="font-semibold text-foreground">{store?.name}</h1>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -70,7 +79,7 @@ function ChatRoomPage() {
             </Button>
           </div>
         </div>
-        <Messages chat={chat} chatFor="client" />
+        <Messages roomId={id} chat={chatInfo} chatFor="client" />
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ function CartSummary({ items }) {
 
   // Calculate totals
   const subtotal = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + item?.price * item?.quantity,
     0
   );
   const tax = subtotal * 0.07; // 7% tax

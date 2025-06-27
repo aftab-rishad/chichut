@@ -71,3 +71,105 @@ export function MoodEmpty(props) {
     </svg>
   );
 }
+
+export function TypingIcon(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="3em"
+      height="3em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <circle cx="4" cy="12" r="3" fill="currentColor">
+        <animate
+          id="svgSpinners3DotsBounce0"
+          attributeName="cy"
+          begin="0;svgSpinners3DotsBounce1.end+0.25s"
+          calcMode="spline"
+          dur="0.6s"
+          keySplines=".33,.66,.66,1;.33,0,.66,.33"
+          values="12;6;12"
+        />
+      </circle>
+      <circle cx="12" cy="12" r="3" fill="currentColor">
+        <animate
+          attributeName="cy"
+          begin="svgSpinners3DotsBounce0.begin+0.1s"
+          calcMode="spline"
+          dur="0.6s"
+          keySplines=".33,.66,.66,1;.33,0,.66,.33"
+          values="12;6;12"
+        />
+      </circle>
+      <circle cx="20" cy="12" r="3" fill="currentColor">
+        <animate
+          id="svgSpinners3DotsBounce1"
+          attributeName="cy"
+          begin="svgSpinners3DotsBounce0.begin+0.2s"
+          calcMode="spline"
+          dur="0.6s"
+          keySplines=".33,.66,.66,1;.33,0,.66,.33"
+          values="12;6;12"
+        />
+      </circle>
+    </svg>
+  );
+}
+
+export function Men(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="4rem"
+      height="4rem"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      {/* Icon from Material Design Icons by Pictogrammers - https://github.com/Templarian/MaterialDesign/blob/master/LICENSE */}
+      <path
+        fill="currentColor"
+        d="M20 22H4v-2c0-2.2 3.6-4 8-4s8 1.8 8 4M8 9h8v1c0 2.2-1.8 4-4 4s-4-1.8-4-4m11-6c-.6 0-1 .4-1 1v1h-1.5l-1.4-3c-.1-.2-.2-.4-.4-.5c-.5-.5-1.3-.6-2-.3l-.7.2l-.7-.3c-.7-.3-1.5-.2-2 .3c-.2.2-.3.4-.4.6L7.5 6H6V5c0-.6-.4-1-1-1s-1 .4-1 1v1c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V5c0-.5-.4-1-1-1"
+      />
+    </svg>
+  );
+}
+
+export function Women(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="4rem"
+      height="4rem"
+      viewBox="0 0 48 48"
+      {...props}
+    >
+      {/* Icon from IconPark Solid by ByteDance - https://github.com/bytedance/IconPark/blob/master/LICENSE */}
+      <path
+        fill="currentColor"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="4"
+        d="M19.225 6.37c-3.183 0-8.063 1.837-6.366 13.213q.04.258.095.557c.31 1.711.788 4.36-2.254 6.544c2.069 1.698 5.016 3.395 8.597 4.13a28 28 0 0 1-.532 2.414c-.291 1.068-.901 1.825-1.991 2.148c-.96.284-1.966.514-2.996.75q-.398.09-.8.184c-1.285.299-2.595.63-3.756 1.098c-1.164.47-2.246 1.103-3.028 2.047c-.796.963-1.222 2.177-1.193 3.695c.01.472.414.85.91.85h36.178c.496 0 .9-.378.91-.85c.029-1.518-.396-2.732-1.193-3.695c-.781-.944-1.864-1.578-3.027-2.047c-1.162-.469-2.472-.8-3.758-1.099l-.798-.183c-1.031-.236-2.037-.466-2.997-.75c-1.09-.323-1.7-1.08-1.991-2.148a27 27 0 0 1-.606-2.88c2.738-.824 5.648-2.305 8.671-4.67l-.014-.014c-1.419-1.358-4.079-3.904-4.268-9.948c0-8.322-5.306-15.637-13.793-9.347Z"
+      />
+    </svg>
+  );
+}
+
+export function Kids(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="4rem"
+      height="4rem"
+      viewBox="0 0 32 32"
+      {...props}
+    >
+      {/* Icon from Custom Brand Icons by Emanuele & rchiileea - https://github.com/elax46/custom-brand-icons/blob/main/LICENSE */}
+      <path
+        fill="currentColor"
+        d="M21 25.5c-1.104 0-2-1.119-2-2.5s.896-2.5 2-2.5s2 1.119 2 2.5s-.896 2.5-2 2.5M16 15c-1.657 0-3-1.119-3-2.5s1.343-2.5 3-2.5s3 1.119 3 2.5s-1.343 2.5-3 2.5m-5 10.5c-1.104 0-2-1.119-2-2.5s.896-2.5 2-2.5s2 1.119 2 2.5s-.896 2.5-2 2.5M16 11a1 1 0 1 1 0 2a1 1 0 1 1 0-2m9 5a3 3 0 0 0-1.208.258c-.642-.804-1.514-1.497-2.553-2.036a6.43 6.43 0 0 0 1.215-3.761c0-.025-.004-.05-.004-.075A3.23 3.23 0 0 0 21.77 4c-.918 0-1.743.387-2.331 1.002a6.43 6.43 0 0 0-6.882-.005A3.22 3.22 0 0 0 10.23 4A3.23 3.23 0 0 0 7 7.23a3.23 3.23 0 0 0 2.536 3.152l-.004.079c0 1.407.455 2.705 1.219 3.767c-1.034.538-1.903 1.229-2.543 2.03A3 3 0 0 0 7 16a3 3 0 1 0 0 6c.028 0 .054-.008.081-.008A6 6 0 0 0 7 23c0 2.762 1.791 5 4 5c1.351 0 2.539-.842 3.264-2.123c.562.079 1.141.123 1.736.123s1.174-.044 1.736-.123C18.461 27.158 19.649 28 21 28c2.209 0 4-2.238 4-5q0-.52-.081-1.008c.027 0 .053.008.081.008a3 3 0 1 0 0-6"
+      />
+    </svg>
+  );
+}

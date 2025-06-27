@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import {
   MessageCircleMore,
   CreditCard,
@@ -14,11 +13,59 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { socket } from "@/lib/socket";
 
 function MobileSidebar({ id }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
+  useEffect(() => {
+    const handleConnect = () => {
+      console.log("Connected to socket server");
+    };
+    const handleDisconnect = () => {
+      console.log("Disconnected from socket server");
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+
+    socket.emit("join-room", {
+      roomId: `${id}-vendor`,
+    });
+
+    socket.emit("old-unread", {
+      id: id,
+      unreadFor: "vendorId",
+    });
+
+    socket.on("unread-message", ({ unread }) => {
+      const audio = new Audio("/sounds/notification.mp3");
+      audio.play().catch((err) => {
+        console.error("Error playing notification sound:", err);
+      });
+      setUnreadMessages((prev) => prev + unread);
+    });
+    socket.on("old-unread", ({ unreadMessages }) => {
+      setUnreadMessages(unreadMessages.unreadVendor || 0);
+    });
+
+    socket.on("clean-unread", ({ unreadFor, prevUnread }) => {
+      if (unreadFor === "unreadVendor") {
+        setUnreadMessages((prev) => prev - prevUnread);
+      }
+    });
+
+    return () => {
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("old-unread");
+      socket.off("unread-message");
+      socket.off("clean-unread");
+    };
+  }, []);
   const navigation = [
-    { name: "Dashboard", href: `/seller/${id}/dashboard`, icon: Home },
     {
       name: "Products",
       href: `/seller/${id}/dashboard/products`,
@@ -26,18 +73,14 @@ function MobileSidebar({ id }) {
     },
     {
       name: "Orders",
-      href: "#",
+      href: `/seller/${id}/dashboard/orders`,
       icon: ShoppingCart,
-      badge: "0",
     },
-    { name: "Customers", href: "#", icon: Users },
     {
       name: "Messages",
       href: `/seller/${id}/dashboard/chat`,
       icon: MessageCircleMore,
     },
-    { name: "Payments", href: "#", icon: CreditCard },
-    { name: "Settings", href: "#", icon: Settings },
   ];
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -75,9 +118,9 @@ function MobileSidebar({ id }) {
                 >
                   <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
                   <span className="flex-1">{item.name}</span>
-                  {item.badge && (
-                    <Badge variant="secondary" className="ml-auto">
-                      {item.badge}
+                  {item.name === "Messages" && unreadMessages > 0 && (
+                    <Badge className="bg-red-500 font-bold text-xs rounded-full w-5 h-5">
+                      {unreadMessages}
                     </Badge>
                   )}
                 </Link>

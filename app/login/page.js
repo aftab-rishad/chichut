@@ -1,15 +1,15 @@
 import me from "@/graphql/query/me";
 import { redirect } from "next/navigation";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 
-const LoginForm = dynamic(() => import("@/components/auth/LoginForm"));
-const AuthPage = dynamic(() => import("@/components/auth/AuthPage"));
+const LoginForm = dynamicImport(() => import("@/components/auth/LoginForm"));
+const AuthPage = dynamicImport(() => import("@/components/auth/AuthPage"));
 
 export const metadata = {
   title: "Login to ChicHut",
   description: "Login to ChicHut",
 };
-
+export const dynamic = "force-dynamic";
 async function LoginPage() {
   const isUserLoggedIn = await me("email");
   if (isUserLoggedIn?.email) {

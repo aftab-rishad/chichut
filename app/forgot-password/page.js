@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { redirect } from "next/navigation";
 import me from "@/graphql/query/me";
 
@@ -7,11 +7,11 @@ export const metadata = {
   description: "Forgot your ChicHut password?",
 };
 
-const AuthPage = dynamic(() => import("@/components/auth/AuthPage"));
-const ForgotPassForm = dynamic(() =>
+const AuthPage = dynamicImport(() => import("@/components/auth/AuthPage"));
+const ForgotPassForm = dynamicImport(() =>
   import("@/components/auth/ForgotPassForm")
 );
-
+export const dynamic = "force-dynamic";
 async function ForgotPasswordPage() {
   const isUserLoggedIn = await me("email");
   if (isUserLoggedIn?.email) {
