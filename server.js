@@ -4,9 +4,8 @@ import { Server } from "socket.io";
 import { db } from "./lib/db.js";
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
-const port = 3000;
-const app = next({ dev, hostname, port });
+const port = parseInt(process.env.PORT, 10) || 3000;
+const app = next({ dev });
 const handler = app.getRequestHandler();
 
 app.prepare().then(() => {
@@ -14,8 +13,7 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer, {
     cors: {
-      origin:
-        process.env.NEXT_PUBLIC_SOCKET_URL || `http://${hostname}:${port}`,
+      origin: process.env.NEXT_PUBLIC_SOCKET_URL,
       methods: ["GET", "POST"],
       allowedHeaders: ["Content-Type"],
       credentials: true,
@@ -228,6 +226,6 @@ app.prepare().then(() => {
       process.exit(1);
     })
     .listen(port, () => {
-      console.log(`🚀 Ready on http://${hostname}:${port}`);
+      console.log(`🚀 Ready on http://localhost:3000`);
     });
 });
