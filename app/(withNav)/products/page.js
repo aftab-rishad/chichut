@@ -1,9 +1,22 @@
 import { SlidersHorizontal } from "lucide-react";
 import ProductCard from "@/components/common/ProductCard";
-import FilterSidebar from "@/components/products/FilterSidebar";
-import MobileFilter from "@/components/products/MobileFilter";
 import getProducts from "@/graphql/query/products";
 import { notFound } from "next/navigation";
+import dynamicImport from "next/dynamic";
+
+const FilterSidebar = dynamicImport(
+  () => import("@/components/products/FilterSidebar"),
+  {
+    ssr: false,
+  }
+);
+
+const MobileFilter = dynamicImport(
+  () => import("@/components/products/MobileFilter"),
+  {
+    ssr: false,
+  }
+);
 
 const allCategory = {
   women: ["Dresses", "Tops", "Bottoms", "Accessories"],

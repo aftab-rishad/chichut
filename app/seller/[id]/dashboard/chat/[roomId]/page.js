@@ -1,4 +1,3 @@
-import Messages from "@/components/chat/id/Messages";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -7,6 +6,11 @@ import Link from "next/link";
 import getRoomById from "@/graphql/query/roomById";
 import getUser from "@/graphql/query/user";
 import brand from "@/graphql/query/brand";
+import dynamicImport from "next/dynamic";
+
+const Messages = dynamicImport(() => import("@/components/chat/id/Messages"), {
+  ssr: false,
+});
 
 export const dynamic = "force-dynamic";
 

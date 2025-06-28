@@ -78,6 +78,8 @@ function Notifications() {
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
+      socket.off("notifications");
+      socket.off("new-notification");
     };
   }, []);
 

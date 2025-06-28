@@ -2,9 +2,13 @@ import Image from "next/image";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import AddToCart from "./AddToCart";
 import carts from "@/graphql/query/carts";
 import me from "@/graphql/query/me";
+import dynamicImport from "next/dynamic";
+
+const AddToCart = dynamicImport(() => import("./AddToCart"), {
+  ssr: false,
+});
 
 export default async function ProductCard({ product }) {
   const allCarts = await carts("productId userId");

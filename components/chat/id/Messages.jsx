@@ -70,6 +70,9 @@ function Messages({ chat, chatFor, roomId }) {
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
+      socket.off("old-messages");
+      socket.off("typing");
+      socket.off("new-message");
     };
   }, []);
 

@@ -1,6 +1,13 @@
-import EmptyChat from "@/components/chat/EmptyChat";
-import ChatList from "@/components/chat/ChatList";
 import getRooms from "@/graphql/query/rooms";
+import dynamicImport from "next/dynamic";
+
+const ChatList = dynamicImport(() => import("@/components/chat/ChatList"), {
+  ssr: false,
+});
+
+const EmptyChat = dynamicImport(() => import("@/components/chat/EmptyChat"), {
+  ssr: false,
+});
 
 export const dynamic = "force-dynamic";
 

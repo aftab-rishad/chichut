@@ -1,6 +1,18 @@
-import OrdersPage from "@/components/dashboard/orders/OrdersPage";
-import TopSection from "@/components/dashboard/TopSection";
-import React from "react";
+import dynamicImport from "next/dynamic";
+
+const OrdersPage = dynamicImport(
+  () => import("@/components/dashboard/orders/OrdersPage"),
+  {
+    ssr: false,
+  }
+);
+
+const TopSection = dynamicImport(
+  () => import("@/components/dashboard/TopSection"),
+  {
+    ssr: false,
+  }
+);
 
 export const dynamic = "force-dynamic";
 

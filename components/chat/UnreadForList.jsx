@@ -38,6 +38,7 @@ function UnreadForList({ id, listOf, roomId }) {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
       socket.off("unread-messages");
+      socket.off("old-unread-for-list");
     };
   }, []);
 

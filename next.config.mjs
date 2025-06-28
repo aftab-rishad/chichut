@@ -9,6 +9,8 @@ const nextConfig = {
     ],
   },
   reactStrictMode: false,
+  productionBrowserSourceMaps: false,
+  experimental: { serverSourceMaps: false },
 };
 
 export default nextConfig;

@@ -1,4 +1,3 @@
-import DesktopSidebar from "@/components/dashboard/DesktopSidebar";
 import brand from "@/graphql/query/brand";
 import me from "@/graphql/query/me";
 import dynamic from "next/dynamic";
@@ -7,6 +6,13 @@ import { notFound } from "next/navigation";
 
 const MobileSidebar = dynamic(
   () => import("@/components/dashboard/MobileSidebar"),
+  {
+    ssr: false,
+  }
+);
+
+const DesktopSidebar = dynamic(
+  () => import("@/components/dashboard/DesktopSidebar"),
   {
     ssr: false,
   }

@@ -1,6 +1,15 @@
-import ProductPage from "@/components/product/ProductPage";
 import getProductById from "@/graphql/query/product";
 import { notFound } from "next/navigation";
+
+import dynamicImport from "next/dynamic";
+
+const ProductPage = dynamicImport(
+  () => import("@/components/product/ProductPage"),
+  {
+    ssr: false,
+  }
+);
+
 export const dynamic = "force-dynamic";
 async function Product({ params: { id } }) {
   let product;
