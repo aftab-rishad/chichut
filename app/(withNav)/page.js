@@ -1,3 +1,4 @@
+import Footer from "@/components/common/Footer";
 import CategoriesSection from "@/components/home/CategoriesSection";
 import Hero from "@/components/home/Hero";
 import MultiVendorFeaturesSection from "@/components/home/MultiVendorFeaturesSection";
@@ -16,6 +17,7 @@ export default function Home() {
       <ProductsSection />
       <MultiVendorFeaturesSection />
       <TrustBadgesSection />
+      <Footer />
     </>
   );
 }

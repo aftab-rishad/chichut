@@ -1,7 +1,6 @@
 import Navbar from "@/components/common/Navbar";
 import me from "@/graphql/query/me";
 import brandQuery from "@/graphql/query/brand";
-import Footer from "@/components/common/Footer";
 
 async function NavLayout({ children }) {
   const session = await me("id email firstName lastName");
@@ -11,7 +10,6 @@ async function NavLayout({ children }) {
     <>
       <Navbar brand={getBrand} session={session} />
       <div>{children}</div>
-      <Footer />
     </>
   );
 }
