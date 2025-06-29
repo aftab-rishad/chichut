@@ -2,6 +2,8 @@ import Navbar from "@/components/common/Navbar";
 import me from "@/graphql/query/me";
 import brandQuery from "@/graphql/query/brand";
 
+export const dynamic = "force-dynamic";
+
 async function NavLayout({ children }) {
   const session = await me("id email firstName lastName");
   const getBrand = await brandQuery({ userId: session?.id }, "id");

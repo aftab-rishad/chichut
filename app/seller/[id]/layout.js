@@ -1,22 +1,24 @@
 import brand from "@/graphql/query/brand";
 import me from "@/graphql/query/me";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 
-const MobileSidebar = dynamic(
+const MobileSidebar = dynamicImport(
   () => import("@/components/dashboard/MobileSidebar"),
   {
     ssr: false,
   }
 );
 
-const DesktopSidebar = dynamic(
+const DesktopSidebar = dynamicImport(
   () => import("@/components/dashboard/DesktopSidebar"),
   {
     ssr: false,
   }
 );
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "ChicHut Dashboard",

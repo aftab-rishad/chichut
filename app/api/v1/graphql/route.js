@@ -1,7 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateNextHandler as startGQLServer } from "@as-integrations/next";
 import { resolvers } from "@/app/api/v1/graphql/resolvers";
-import fs from "fs";
 import { typeDefs } from "./schema";
 
 const apolloServer = new ApolloServer({
@@ -14,6 +13,7 @@ const handler = startGQLServer(apolloServer, {
     const authHeader = req.headers.get("Authorization") || "";
     if (authHeader.startsWith("Bearer ")) {
       const token = authHeader.split(" ")[1];
+      console.log(token, "token in context");
       try {
         return { token };
       } catch (error) {

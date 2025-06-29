@@ -37,14 +37,16 @@ async function ChatPageForVendor({ params: { id } }) {
             <EmptyChat />
           ) : (
             <div className="flex flex-col gap-2">
-              {chats.map((chat) => (
-                <ChatList
-                  listOf="client"
-                  key={chat?.id}
-                  url={`/seller/${id}/dashboard/chat/${chat?.id}`}
-                  chat={chat}
-                />
-              ))}
+              {chats &&
+                Array.isArray(chats) &&
+                chats.map((chat) => (
+                  <ChatList
+                    listOf="client"
+                    key={chat?.id}
+                    url={`/seller/${id}/dashboard/chat/${chat?.id}`}
+                    chat={chat}
+                  />
+                ))}
             </div>
           )}
         </div>

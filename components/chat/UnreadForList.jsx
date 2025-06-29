@@ -37,7 +37,7 @@ function UnreadForList({ id, listOf, roomId }) {
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
-      socket.off("unread-messages");
+      socket.off("unread-message");
       socket.off("old-unread-for-list");
     };
   }, []);

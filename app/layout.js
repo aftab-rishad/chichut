@@ -7,6 +7,8 @@ export const metadata = {
   description: "E-commerce platform",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({ children }) {
   return (
     <html lang="en">
