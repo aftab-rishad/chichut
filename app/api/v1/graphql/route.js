@@ -2,11 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateNextHandler as startGQLServer } from "@as-integrations/next";
 import { resolvers } from "@/app/api/v1/graphql/resolvers";
 import fs from "fs";
-
-const typeDefs = fs.readFileSync(
-  "./app/api/v1/graphql/schema.graphql",
-  "utf-8"
-);
+import { typeDefs } from "./schema";
 
 const apolloServer = new ApolloServer({
   resolvers,
