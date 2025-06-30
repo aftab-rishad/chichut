@@ -2,7 +2,8 @@
 
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
-const graphqlClient = await getGraphQLClient();
+import { cookies } from "next/headers";
+
 export default async function brand({ id, userId, name }, requiredData) {
   const brandQuery = gql`
     query Brand($id: ID, $userId: ID, $name: String) {
@@ -12,6 +13,8 @@ export default async function brand({ id, userId, name }, requiredData) {
     }
   `;
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const data = await graphqlClient.request(brandQuery, {
       id: id || null,
       userId: userId || null,

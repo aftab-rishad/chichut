@@ -1,12 +1,10 @@
 "use server";
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
-import { data } from "autoprefixer";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const createReview = async (data) => {
-  const graphqlClient = await getGraphQLClient();
-
   const mutation = gql`
     mutation CreateReview($rating: Int!, $comment: String!, $productId: ID!) {
       createReview(rating: $rating, comment: $comment, productId: $productId) {
@@ -15,6 +13,8 @@ const createReview = async (data) => {
     }
   `;
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const reviewData = await graphqlClient.request(mutation, data);
     revalidatePath("/", "layout");
     return reviewData?.createReview;

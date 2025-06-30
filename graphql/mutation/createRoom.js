@@ -2,11 +2,12 @@
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
-
-const graphqlClient = await getGraphQLClient();
+import { cookies } from "next/headers";
 
 const createRoom = async ({ vendorId }, req) => {
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const createRoomMutation = gql`
       mutation CreateRoom($vendorId: ID!) {
         createRoom(vendorId: $vendorId) {

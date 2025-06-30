@@ -2,8 +2,8 @@
 
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
+import { cookies } from "next/headers";
 
-const graphqlClient = await getGraphQLClient();
 const verifyOtpMutation = gql`
   mutation VerifyOtp($id: ID!, $otp: String!) {
     verifyOtp(id: $id, otp: $otp)
@@ -12,6 +12,9 @@ const verifyOtpMutation = gql`
 
 const verifyOtp = async ({ id, otp }) => {
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
+
     const result = await graphqlClient.request(verifyOtpMutation, {
       id,
       otp,

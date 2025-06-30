@@ -2,8 +2,8 @@
 
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
+import { cookies } from "next/headers";
 
-const graphqlClient = await getGraphQLClient();
 const sendOtpMutation = gql`
   mutation sendOtp(
     $firstName: String!
@@ -28,6 +28,8 @@ const sendOtp = async (formData) => {
     if (!firstName || !lastName || !email || !password) {
       throw new Error("All fields are required");
     }
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const data = await graphqlClient.request(sendOtpMutation, {
       firstName,
       lastName,

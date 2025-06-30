@@ -3,8 +3,7 @@
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
-
-const graphqlClient = await getGraphQLClient();
+import { cookies } from "next/headers";
 
 const createProduct = async (data, response) => {
   const createProductMutation = gql`
@@ -40,6 +39,8 @@ const createProduct = async (data, response) => {
   `;
 
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const result = await graphqlClient.request(createProductMutation, data);
     revalidatePath("/", "layout");
     return result;

@@ -2,8 +2,8 @@
 
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
+import { cookies } from "next/headers";
 
-const graphqlClient = await getGraphQLClient();
 const resetPasswordMutation = gql`
   mutation ResetPassword(
     $token: String!
@@ -16,6 +16,8 @@ const resetPasswordMutation = gql`
 
 const resetPassword = async ({ token, tokenId, password }) => {
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const data = await graphqlClient.request(resetPasswordMutation, {
       token,
       tokenId,

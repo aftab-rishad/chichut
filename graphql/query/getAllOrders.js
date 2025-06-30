@@ -1,9 +1,9 @@
 "use server";
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
+import { cookies } from "next/headers";
 
 const getAllOrders = async (req) => {
-  const graphqlClient = await getGraphQLClient();
   const ordersQuery = gql`
     query Orders {
       orders {
@@ -12,6 +12,8 @@ const getAllOrders = async (req) => {
     }
   `;
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const data = await graphqlClient.request(ordersQuery);
     return data?.orders;
   } catch (error) {

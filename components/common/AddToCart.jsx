@@ -5,11 +5,14 @@ import addToCart from "@/graphql/mutation/addToCart";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-function AddToCart({ isAlreadyInCart, product }) {
+function AddToCart({ isAlreadyInCart, product, session }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleAddToCart = async () => {
     setIsLoading(true);
+    if (!session?.id) {
+      router.push("/login");
+    }
     if (isAlreadyInCart) {
       router.push("/cart");
       setIsLoading(false);

@@ -13,7 +13,6 @@ const handler = startGQLServer(apolloServer, {
     const authHeader = req.headers.get("Authorization") || "";
     if (authHeader.startsWith("Bearer ")) {
       const token = authHeader.split(" ")[1];
-      console.log(token, "token in context");
       try {
         return { token };
       } catch (error) {

@@ -3,6 +3,7 @@
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const deleteProduct = async (id) => {
   const deleteProductMutation = gql`
@@ -11,7 +12,8 @@ const deleteProduct = async (id) => {
     }
   `;
   try {
-    const graphqlClient = await getGraphQLClient();
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const data = await graphqlClient.request(deleteProductMutation, { id });
     revalidatePath("/", "layout");
     return data?.deleteProduct;

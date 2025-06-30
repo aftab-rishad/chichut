@@ -3,8 +3,7 @@
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
-
-const graphqlClient = await getGraphQLClient();
+import { cookies } from "next/headers";
 
 const createOrder = async (data, response) => {
   const createOrderMutation = gql`
@@ -46,6 +45,8 @@ const createOrder = async (data, response) => {
   `;
 
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const result = await graphqlClient.request(createOrderMutation, data);
     revalidatePath("/", "layout");
     return result?.createOrder;

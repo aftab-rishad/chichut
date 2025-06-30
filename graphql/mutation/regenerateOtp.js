@@ -2,8 +2,8 @@
 
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
+import { cookies } from "next/headers";
 
-const graphqlClient = await getGraphQLClient();
 const regenerateOtpMutation = gql`
   mutation RegenerateOtp($id: ID!) {
     regenerateOtp(id: $id)
@@ -12,6 +12,8 @@ const regenerateOtpMutation = gql`
 
 const regenerateOtp = async ({ id }) => {
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const result = await graphqlClient.request(regenerateOtpMutation, {
       id,
     });

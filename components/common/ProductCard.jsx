@@ -53,7 +53,11 @@ export default async function ProductCard({ product }) {
             View
           </Button>
         </Link>
-        <AddToCart isAlreadyInCart={isAlreadyInCart} product={product} />
+        <AddToCart
+          session={session}
+          isAlreadyInCart={isAlreadyInCart}
+          product={product}
+        />
       </CardFooter>
     </Card>
   );

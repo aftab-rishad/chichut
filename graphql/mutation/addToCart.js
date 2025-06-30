@@ -2,10 +2,9 @@
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const addToCart = async ({ productId, quantity, color, size }) => {
-  const client = await getGraphQLClient();
-
   const mutation = gql`
     mutation AddToCart(
       $productId: ID!
@@ -24,7 +23,9 @@ const addToCart = async ({ productId, quantity, color, size }) => {
     }
   `;
   try {
-    const response = await client.request(mutation, {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
+    const response = await graphqlClient.request(mutation, {
       productId: Number(productId),
       quantity: Number(quantity),
       color,

@@ -3,9 +3,9 @@
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const editProduct = async (data) => {
-  const client = await getGraphQLClient();
   const query = gql`
     mutation EditProduct(
       $id: ID!
@@ -40,7 +40,9 @@ const editProduct = async (data) => {
     }
   `;
   try {
-    const result = await client.request(query, data);
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
+    const result = await graphqlClient.request(query, data);
     revalidatePath("/", "layout");
     return result?.editProduct;
   } catch (error) {

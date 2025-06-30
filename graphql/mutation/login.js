@@ -4,8 +4,6 @@ import { gql } from "graphql-request";
 import { cookies } from "next/headers";
 import { getGraphQLClient } from "@/lib/graphqlClient";
 
-const graphqlClient = await getGraphQLClient();
-
 const loginMutation = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -18,6 +16,8 @@ const login = async (formData) => {
   try {
     const email = formData.get("email");
     const password = formData.get("password");
+    const tokenGet = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(tokenGet);
 
     const data = await graphqlClient.request(loginMutation, {
       email,
@@ -25,10 +25,12 @@ const login = async (formData) => {
     });
     const token = data?.login?.token;
     if (token) {
-      const cookieStore = await cookies();
+      const cookieStore = cookies();
       cookieStore.set("token", token, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        sameSite: "lax",
         maxAge: 31536000,
       });
     }

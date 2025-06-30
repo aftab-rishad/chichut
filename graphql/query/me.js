@@ -4,8 +4,6 @@ import { gql } from "graphql-request";
 import { cookies } from "next/headers";
 import { getGraphQLClient } from "@/lib/graphqlClient";
 
-const graphqlClient = await getGraphQLClient();
-
 const me = async (requiredData) => {
   const meQuery = gql`
     query Me($token: String!) {
@@ -15,8 +13,9 @@ const me = async (requiredData) => {
     }
   `;
   try {
-    const cookieStore = await cookies();
+    const cookieStore = cookies();
     const token = cookieStore?.get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
 
     if (!token) {
       return null;

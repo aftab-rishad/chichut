@@ -2,7 +2,7 @@
 
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
-const graphqlClient = await getGraphQLClient();
+import { cookies } from "next/headers";
 const brands = async (requiredData) => {
   const brandsQuery = gql`
     query Brands {
@@ -12,6 +12,8 @@ const brands = async (requiredData) => {
     }
   `;
   try {
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const data = await graphqlClient.request(brandsQuery);
     return data?.brands;
   } catch (error) {

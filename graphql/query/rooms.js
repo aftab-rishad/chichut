@@ -1,8 +1,7 @@
 "use server";
 import { gql } from "graphql-request";
 import { getGraphQLClient } from "@/lib/graphqlClient";
-
-const graphqlClient = await getGraphQLClient();
+import { cookies } from "next/headers";
 
 const getRooms = async ({ roomFor, id }, req) => {
   try {
@@ -13,6 +12,8 @@ const getRooms = async ({ roomFor, id }, req) => {
         }
       }
     `;
+    const token = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(token);
     const data = await graphqlClient.request(getRoomQuery, {
       id: Number(id),
       roomFor,
