@@ -219,9 +219,10 @@ function Messages({ chat, chatFor, roomId }) {
             variant="default"
             disabled={!message.trim()}
             size="lg"
-            className="w-36"
+            className="md:w-36"
           >
-            Send Message <Send className="h-8 w-8" />
+            <span className="hidden md:flex">Send Message</span>
+            <Send className="h-8 w-8" />
           </Button>
         </form>
       </div>
