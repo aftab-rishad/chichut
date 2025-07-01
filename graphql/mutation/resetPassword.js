@@ -16,8 +16,8 @@ const resetPasswordMutation = gql`
 
 const resetPassword = async ({ token, tokenId, password }) => {
   try {
-    const token = cookies().get("token")?.value;
-    const graphqlClient = await getGraphQLClient(token);
+    const tokenJWT = cookies().get("token")?.value;
+    const graphqlClient = await getGraphQLClient(tokenJWT);
     const data = await graphqlClient.request(resetPasswordMutation, {
       token,
       tokenId,

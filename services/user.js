@@ -95,41 +95,13 @@ class UserService {
           expiredAt: new Date(Date.now() + 15 * 60 * 1000),
         },
       });
-      this.sendMail({
+      const expiredAt = new Date(
+        Date.now() + 15 * 60 * 1000
+      ).toLocaleTimeString();
+      this.sendEmail({
         to: user.email,
-        link: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetPassword?.token}&tokenId=${resetPassword?.id}`,
-      });
-      return resetPassword?.token ? true : false;
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }
-  async sendMail({ to, link }) {
-    let sendData;
-    const expiredAt = new Date(
-      Date.now() + 15 * 60 * 1000
-    ).toLocaleTimeString();
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-      },
-      connectionTimeout: 10000,
-      greetingTimeout: 5000,
-      socketTimeout: 15000,
-      pool: true,
-      maxConnections: 1,
-      maxMessages: 3,
-    });
-
-    const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to,
-      subject: `Reset your ChicHut password.`,
-      html: `<html lang="en-US">
+        subject: "Reset your ChicHut password.",
+        html: `<html lang="en-US">
 
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
@@ -178,7 +150,7 @@ class UserService {
                                                 This link will expire at <span style="font-weight:bold;color:#58b56e">${expiredAt}</span>.
                                             </span>
                                         </p>
-                                        <a href="${link}"
+                                        <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetPassword?.token}&tokenId=${resetPassword?.id}"
                                             target="_blank"
                                             style="background:#58b56e;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
                                             Password</a>
@@ -204,15 +176,11 @@ class UserService {
 </body>
 
 </html>`,
-    };
-
-    await transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log("Error:", error);
-      } else {
-        sendData = info;
-      }
-    });
+      });
+      return resetPassword?.token ? true : false;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
   async isValidResetUrl({ token, tokenId }) {
     try {
@@ -261,9 +229,8 @@ class UserService {
       throw new Error(error.message);
     }
   }
-  async otpMail({ to, otp, firstName }) {
+  async sendEmail({ to, subject, html }) {
     let sendData;
-    const expiredAt = new Date(Date.now() + 5 * 60 * 1000).toLocaleTimeString();
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
@@ -283,8 +250,50 @@ class UserService {
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to,
-      subject: `OTP for your ChicHut account verification`,
-      html: `<section style="max-width: 42rem; padding: 2rem 1.5rem; margin: 0 auto; background-color: white; color: #1a202c;">
+      subject,
+      html,
+    };
+
+    await transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log("Error:", error);
+      } else {
+        sendData = info;
+      }
+    });
+  }
+  async sendOtp({ firstName, lastName, email, password }) {
+    try {
+      const otp = Math.floor(100000 + Math.random() * 900000);
+      const expiredAt = new Date(
+        Date.now() + 5 * 60 * 1000
+      ).toLocaleTimeString();
+      const userAlreadyExists = await this.db.user.findFirst({
+        where: { email },
+      });
+      if (userAlreadyExists) {
+        throw new Error("User already exists");
+      }
+      const alreadyExists = await this.db.otp.findFirst({
+        where: { email },
+      });
+      if (alreadyExists) {
+        const pwHash = await bcrypt.hash(password, 10);
+        await this.db.otp.update({
+          where: { id: Number(alreadyExists.id) },
+          data: {
+            firstName,
+            lastName,
+            email,
+            password: pwHash,
+            otp,
+            expiredAt: new Date(Date.now() + 5 * 60 * 1000),
+          },
+        });
+        this.sendEmail({
+          to: email,
+          subject: `OTP for your ChicHut account verification.`,
+          html: `<section style="max-width: 42rem; padding: 2rem 1.5rem; margin: 0 auto; background-color: white; color: #1a202c;">
 
 
     <main style="margin-top: 2rem;">
@@ -313,42 +322,7 @@ class UserService {
     </footer>
 </section>
 `,
-    };
-
-    await transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log("Error:", error);
-      } else {
-        sendData = info;
-      }
-    });
-  }
-  async sendOtp({ firstName, lastName, email, password }) {
-    try {
-      const otp = Math.floor(100000 + Math.random() * 900000);
-      const userAlreadyExists = await this.db.user.findFirst({
-        where: { email },
-      });
-      if (userAlreadyExists) {
-        throw new Error("User already exists");
-      }
-      const alreadyExists = await this.db.otp.findFirst({
-        where: { email },
-      });
-      if (alreadyExists) {
-        const pwHash = await bcrypt.hash(password, 10);
-        await this.db.otp.update({
-          where: { id: Number(alreadyExists.id) },
-          data: {
-            firstName,
-            lastName,
-            email,
-            password: pwHash,
-            otp,
-            expiredAt: new Date(Date.now() + 5 * 60 * 1000),
-          },
         });
-        this.otpMail({ to: email, otp, firstName });
         return alreadyExists?.id;
       } else {
         const pwHash = await bcrypt.hash(password, 10);
@@ -362,7 +336,40 @@ class UserService {
             expiredAt: new Date(Date.now() + 5 * 60 * 1000),
           },
         });
-        this.otpMail({ to: email, otp, firstName });
+
+        this.sendEmail({
+          to: email,
+          subject: `OTP for your ChicHut account verification.`,
+          html: `<section style="max-width: 42rem; padding: 2rem 1.5rem; margin: 0 auto; background-color: white; color: #1a202c;">
+
+
+    <main style="margin-top: 2rem;">
+        <h2 style="color: #4a5568;">Hi ${firstName},</h2>
+
+        <p style="margin-top: 0.5rem; line-height: 1.75; color: #718096;">
+            This is your verification code:
+        </p>
+
+        <div style="color: #58b56e; font-size: 2rem; font-weight: bold; margin-top: 1rem; line-height: 1.75;">${otp?.toString()}</div>
+
+        <p style="margin-top: 1rem; line-height: 1.75; color: #718096;">
+            This code will only be valid for the <span style="font-weight: bold; color: #58b56e;">${expiredAt}</span>. If the code does not work, you can generate a new one.
+        </p>
+
+        <p style="margin-top: 2rem; color: #718096;">
+            Thanks, <br>
+            ChicHut team
+        </p>
+    </main>
+
+    <footer style="margin-top: 2rem;">
+      
+
+        <p style="margin-top: 0.75rem; color: #a0aec0;">© ${new Date().getFullYear()} ChicHut. All Rights Reserved.</p>
+    </footer>
+</section>
+`,
+        });
         return createdOtp?.id;
       }
     } catch (error) {
@@ -427,11 +434,43 @@ class UserService {
           expiredAt: new Date(Date.now() + 5 * 60 * 1000),
         },
       });
-      this.otpMail({
+      const expiredAt = new Date(
+        Date.now() + 5 * 60 * 1000
+      ).toLocaleTimeString();
+      this.sendEmail({
         to: otpFromDb?.email,
-        otp,
-        firstName: otpFromDb?.firstName,
+        subject: `OTP for your ChicHut account verification.`,
+        html: `<section style="max-width: 42rem; padding: 2rem 1.5rem; margin: 0 auto; background-color: white; color: #1a202c;">
+
+
+    <main style="margin-top: 2rem;">
+        <h2 style="color: #4a5568;">Hi ${otpFromDb?.firstName},</h2>
+
+        <p style="margin-top: 0.5rem; line-height: 1.75; color: #718096;">
+            This is your verification code:
+        </p>
+
+        <div style="color: #58b56e; font-size: 2rem; font-weight: bold; margin-top: 1rem; line-height: 1.75;">${otp?.toString()}</div>
+
+        <p style="margin-top: 1rem; line-height: 1.75; color: #718096;">
+            This code will only be valid for the <span style="font-weight: bold; color: #58b56e;">${expiredAt}</span>. If the code does not work, you can generate a new one.
+        </p>
+
+        <p style="margin-top: 2rem; color: #718096;">
+            Thanks, <br>
+            ChicHut team
+        </p>
+    </main>
+
+    <footer style="margin-top: 2rem;">
+      
+
+        <p style="margin-top: 0.75rem; color: #a0aec0;">© ${new Date().getFullYear()} ChicHut. All Rights Reserved.</p>
+    </footer>
+</section>
+`,
       });
+
       return otpFromDb?.id;
     } catch (error) {
       throw new Error(error.message);
