@@ -117,6 +117,12 @@ class UserService {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS,
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 5000,
+      socketTimeout: 15000,
+      pool: true,
+      maxConnections: 1,
+      maxMessages: 3,
     });
 
     const mailOptions = {
@@ -266,6 +272,12 @@ class UserService {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS,
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 5000,
+      socketTimeout: 15000,
+      pool: true,
+      maxConnections: 1,
+      maxMessages: 3,
     });
 
     const mailOptions = {
