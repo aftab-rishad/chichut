@@ -43,6 +43,7 @@
 ### 4. Product Management (CRUD)
 
 * Vendors can **create**, **edit**, **delete**, and **manage** products with images.
+* Vendors can generate smart product titles and descriptions using AI.
 
 ### 5. Shopping Cart & Checkout
 
