@@ -286,9 +286,9 @@ class ProductService {
           userId: Number(userId),
         },
       });
-      const orderProductIds = orders
-        .flatMap((order) => order.products || [])
-        .find((p) => p?.id && Number(p.id) === Number(product?.id));
+      const orderProductIds = orders.find(
+        (order) => Number(order?.product?.id) === Number(product?.id)
+      );
 
       const allMyReview = await this.db.review.findMany({
         where: {
@@ -303,7 +303,7 @@ class ProductService {
         throw new Error("Product not found!");
       } else if (brand && brand?.name === product?.brand) {
         throw new Error("Sorry, you're not able to review your own product.");
-      } else if (!orderProductIds?.id) {
+      } else if (!orderProductIds?.product?.id) {
         throw new Error("Sorry, you can't submit a review for this product.");
       } else if (alreadyReviewDone) {
         throw new Error("You've already reviewed this product.");

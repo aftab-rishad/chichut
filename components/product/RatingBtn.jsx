@@ -29,7 +29,7 @@ function RatingBtn({
   return (
     <>
       <div className="flex items-center justify-between">
-        {!alreadyReviewDone && orderProductIds?.id && (
+        {!alreadyReviewDone && orderProductIds?.product?.id && (
           <Button onClick={() => setIsOpen(true)} variant="default" size="sm">
             Add Reviews <PlusIcon />
           </Button>
