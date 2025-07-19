@@ -20,6 +20,7 @@
 * **Database:** PostgreSQL
 * **Real-time:** Socket.IO
 * **Authentication:** Role-based auth with secure cookies
+* **AI-Powered Product Info:** Gemini AI
 * **Styling:** Tailwind CSS and ShadCN
 * **Image Handling:** Image upload & storage support
 
@@ -43,6 +44,7 @@
 ### 4. Product Management (CRUD)
 
 * Vendors can **create**, **edit**, **delete**, and **manage** products with images.
+* Vendors can generate smart product titles and descriptions using AI.
 
 ### 5. Shopping Cart & Checkout
 
