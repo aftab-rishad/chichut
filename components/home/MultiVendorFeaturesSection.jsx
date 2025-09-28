@@ -55,7 +55,7 @@ export default function MultiVendorFeaturesSection() {
           </Card>
         </div>
         <div className="text-center">
-          <Link href="/seller/create">
+          <Link prefetch href="/seller/create">
             <Button className="bg-primary hover:bg-primary/90">
               Become a Seller
             </Button>

@@ -18,6 +18,7 @@ async function Product({ params: { id } }) {
   } catch (error) {
     console.log("Error fetching product data:", error);
   }
+
   if (!product) {
     notFound();
   }

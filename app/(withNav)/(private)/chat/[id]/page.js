@@ -50,7 +50,7 @@ async function ChatRoomPage({ params: { id } }) {
       <div className="h-screen flex flex-col bg-background text-foreground">
         <div className="flex fixed top-0 z-50 w-full items-center justify-between p-4 border-b border-border bg-background">
           <div className="flex items-center space-x-3">
-            <Link href="/chat">
+            <Link prefetch href="/chat">
               <Button
                 variant="ghost"
                 size="icon"
@@ -95,7 +95,7 @@ const ChatNotFound = () => {
         <p className="text-muted-foreground mb-4">
           This conversation doesn't exist.
         </p>
-        <Link href="/chat">
+        <Link prefetch href="/chat">
           <Button variant="outline">Back to Messages</Button>
         </Link>
       </Card>

@@ -66,7 +66,7 @@ function ChatIconNav() {
   }, []);
 
   return (
-    <Link href="/chat">
+    <Link prefetch href="/chat">
       <Button variant="ghost" size="icon" className="flex relative">
         {unreadMessages > 0 && (
           <Badge className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 z-50">

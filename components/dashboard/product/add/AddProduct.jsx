@@ -102,7 +102,7 @@ function AddProduct({ url, dataForEdit = {} }) {
       <form autoComplete="off" onSubmit={onSubmit} onChange={handleChange}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Link href={url}>
+            <Link prefetch href={url}>
               <Button variant="outline" size="icon">
                 <ArrowLeft className="h-4 w-4" />
                 <span className="sr-only">Back</span>
@@ -113,7 +113,7 @@ function AddProduct({ url, dataForEdit = {} }) {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <Link href={url}>
+            <Link prefetch href={url}>
               <Button variant="outline">Cancel</Button>
             </Link>
             <Button variant="outline">

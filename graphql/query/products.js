@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 
 const getProducts = async (
   req,
-  { priceStart, priceEnd, category, subCategory, page }
+  { priceStart, priceEnd, category, subCategory }
 ) => {
   const getProductsQuery = gql`
     query GetProducts(

@@ -57,6 +57,7 @@ export default async function CartPage() {
         <Link
           href="/products"
           className="flex items-center text-sm font-medium transition-colors hover:text-primary"
+          prefetch
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Continue Shopping

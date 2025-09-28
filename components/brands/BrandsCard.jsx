@@ -20,7 +20,7 @@ function BrandsCard({ brand }) {
           />
         </div>
         <h3 className="font-medium text-center">{brand?.name}</h3>
-        <Link href={`/brands/${brand?.id}`} className="mt-2">
+        <Link prefetch href={`/brands/${brand?.id}`} className="mt-2">
           <Button variant="link" className="text-primary p-0 h-auto mt-1">
             Shop Brand
           </Button>

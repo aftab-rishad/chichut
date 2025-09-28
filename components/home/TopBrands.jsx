@@ -12,7 +12,7 @@ async function TopBrands() {
       <div className="container mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-bold">Brands</h2>
-          <Link href="/brands">
+          <Link prefetch href="/brands">
             <Button variant="ghost" className="gap-1">
               View All <ChevronRight className="h-4 w-4" />
             </Button>

@@ -32,7 +32,7 @@ export default function CategoriesSection() {
                   <h3 className="text-white font-bold text-2xl">
                     {category.name}
                   </h3>
-                  <Link href={category.url}>
+                  <Link prefetch href={category.url}>
                     <Button
                       variant="outline"
                       size="sm"

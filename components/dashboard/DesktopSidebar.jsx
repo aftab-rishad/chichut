@@ -89,6 +89,7 @@ function DesktopSidebar({ id }) {
         <div className="flex flex-col flex-grow border-r border-border bg-card">
           <div className="flex items-center h-16 flex-shrink-0 px-4 border-b border-border">
             <Link
+              prefetch
               href={`/seller/${id}/dashboard`}
               className="flex items-center gap-2"
             >
@@ -102,6 +103,7 @@ function DesktopSidebar({ id }) {
             <nav className="flex-1 px-3 space-y-2">
               {navigation.map((item) => (
                 <Link
+                  prefetch
                   key={item.name}
                   href={item.href}
                   className={`

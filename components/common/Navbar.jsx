@@ -105,6 +105,7 @@ export default function Navbar({ session, brand }) {
                 {/* Fixed Header */}
                 <div className="p-4 border-b">
                   <Link
+                    prefetch
                     href="/"
                     className={`flex items-center text-3xl font-bold text-primary gap-2 ${dancingScript.className}`}
                   >
@@ -122,10 +123,14 @@ export default function Navbar({ session, brand }) {
                             className="w-full bg-primary hover:bg-primary/90"
                             asChild
                           >
-                            <Link href="/register">Create Account</Link>
+                            <Link prefetch href="/register">
+                              Create Account
+                            </Link>
                           </Button>
                           <Button variant="outline" className="w-full" asChild>
-                            <Link href="/login">Login</Link>
+                            <Link prefetch href="/login">
+                              Login
+                            </Link>
                           </Button>
                         </>
                       )}
@@ -159,6 +164,7 @@ export default function Navbar({ session, brand }) {
                           <div className="flex flex-col space-y-2 pl-1">
                             {categories.women.map((item) => (
                               <Link
+                                prefetch
                                 key={item.name}
                                 href={item.href}
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -175,6 +181,7 @@ export default function Navbar({ session, brand }) {
                           <div className="flex flex-col space-y-2 pl-1">
                             {categories.men.map((item) => (
                               <Link
+                                prefetch
                                 key={item.name}
                                 href={item.href}
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -191,6 +198,7 @@ export default function Navbar({ session, brand }) {
                           <div className="flex flex-col space-y-2 pl-1">
                             {categories.kids.map((item) => (
                               <Link
+                                prefetch
                                 key={item.name}
                                 href={item.href}
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -205,6 +213,7 @@ export default function Navbar({ session, brand }) {
 
                     <div className="flex flex-col space-y-3 pt-2">
                       <Link
+                        prefetch
                         href="/brands"
                         className="text-sm font-medium hover:text-primary transition-colors"
                       >
@@ -224,7 +233,9 @@ export default function Navbar({ session, brand }) {
                       Need help?
                     </div>
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href="/contact">Contact Us</Link>
+                      <Link prefetch href="/contact">
+                        Contact Us
+                      </Link>
                     </Button>
                   </div>
                 </div>
@@ -232,6 +243,7 @@ export default function Navbar({ session, brand }) {
             </SheetContent>
 
             <Link
+              prefetch
               href="/"
               className={`flex items-center text-3xl font-bold text-primary gap-2 ${dancingScript.className}`}
             >
@@ -251,6 +263,7 @@ export default function Navbar({ session, brand }) {
                     <li key={item.name}>
                       <NavigationMenuLink asChild>
                         <Link
+                          prefetch
                           href={item.href}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -270,6 +283,7 @@ export default function Navbar({ session, brand }) {
                     <li key={item.name}>
                       <NavigationMenuLink asChild>
                         <Link
+                          prefetch
                           href={item.href}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -289,6 +303,7 @@ export default function Navbar({ session, brand }) {
                     <li key={item.name}>
                       <NavigationMenuLink asChild>
                         <Link
+                          prefetch
                           href={item.href}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -301,7 +316,11 @@ export default function Navbar({ session, brand }) {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/brands" className={navigationMenuTriggerStyle()}>
+              <Link
+                prefetch
+                href="/brands"
+                className={navigationMenuTriggerStyle()}
+              >
                 Brands
               </Link>
             </NavigationMenuItem>
@@ -331,14 +350,18 @@ export default function Navbar({ session, brand }) {
             {!session?.email ? (
               <>
                 <Button variant="outline" size="sm" asChild>
-                  <Link href="/login">Login</Link>
+                  <Link prefetch href="/login">
+                    Login
+                  </Link>
                 </Button>
                 <Button
                   size="sm"
                   className="bg-primary hover:bg-primary/90"
                   asChild
                 >
-                  <Link href="/register">Create Account</Link>
+                  <Link prefetch href="/register">
+                    Create Account
+                  </Link>
                 </Button>
               </>
             ) : (
@@ -348,7 +371,7 @@ export default function Navbar({ session, brand }) {
 
           <div className="flex items-center">
             {/* Cart */}
-            <Link href="/cart" className="relative">
+            <Link prefetch href="/cart" className="relative">
               <Button variant="ghost" size="icon">
                 <ShoppingBag className="h-5 w-5" />
                 <span className="sr-only">Cart</span>

@@ -35,7 +35,7 @@ async function ChatList({ chat, url = "#", listOf }) {
   };
 
   return (
-    <Link key={chat.id} href={url}>
+    <Link prefetch key={chat.id} href={url}>
       <Card className="p-4 hover:bg-muted/50 transition-colors cursor-pointer">
         <div className="flex items-center space-x-3">
           <div className="relative">

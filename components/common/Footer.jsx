@@ -15,6 +15,7 @@ export default function Footer() {
           </div>
           <div className="flex gap-6 text-sm">
             <Link
+              prefetch
               href="#"
               className="text-muted-foreground hover:text-primary transition-colors"
             >

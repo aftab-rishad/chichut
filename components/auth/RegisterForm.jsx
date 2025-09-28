@@ -134,7 +134,7 @@ function RegisterForm() {
         )}
         <p className="text-sm text-foreground/80 mt-6 flex justify-center">
           Already have an account?{" "}
-          <Link href="/login" className="text-primary underline">
+          <Link prefetch href="/login" className="text-primary underline">
             Login
           </Link>
         </p>

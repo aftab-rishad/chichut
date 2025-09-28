@@ -57,6 +57,7 @@ async function ChatRoomPageForVendor({ params: { roomId, id } }) {
         <div className="flex sticky top-0 z-50 items-center w-full justify-between p-4 border-b border-border bg-background">
           <div className="flex items-center space-x-3">
             <Link
+              prefetch
               href={`/seller/${id}/dashboard/chat`}
               className="flex md:hidden"
             >
@@ -105,7 +106,7 @@ const ChatNotFound = ({ id }) => {
         <p className="text-muted-foreground mb-4">
           This conversation doesn't exist.
         </p>
-        <Link href={`/seller/${id}/dashboard/chat`}>
+        <Link prefetch href={`/seller/${id}/dashboard/chat`}>
           <Button variant="outline">Back to Messages</Button>
         </Link>
       </Card>

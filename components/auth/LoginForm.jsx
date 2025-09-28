@@ -72,6 +72,7 @@ function LoginForm() {
             />
           </label>
           <Link
+            prefetch
             href="/forgot-password"
             className="text-primary mt-1 mx-2 flex justify-end text-sm underline"
           >
@@ -98,7 +99,7 @@ function LoginForm() {
         )}
         <p className="text-sm text-foreground/80 mt-6 flex justify-center">
           Don't have an account?{" "}
-          <Link href="/register" className="text-primary underline">
+          <Link prefetch href="/register" className="text-primary underline">
             Register
           </Link>
         </p>

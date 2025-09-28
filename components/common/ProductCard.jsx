@@ -48,7 +48,7 @@ export default async function ProductCard({ product }) {
         </p>
       </CardContent>
       <CardFooter className="p-2 pt-0 flex flex-col gap-2">
-        <Link className="w-full" href={`/product/${product?.id}`}>
+        <Link prefetch className="w-full" href={`/product/${product?.id}`}>
           <Button className="w-full" variant="outline">
             View
           </Button>

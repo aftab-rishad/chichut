@@ -35,6 +35,7 @@ function AvaterOpen({ data, brand }) {
             <div className="py-2">
               <div>
                 <Link
+                  prefetch
                   href={
                     brand?.id
                       ? `/seller/${brand.id}/dashboard`
@@ -64,7 +65,7 @@ function AvaterOpen({ data, brand }) {
               </div>
 
               <div>
-                <Link href="/orders">
+                <Link prefetch href="/orders">
                   <button className="w-full flex items-start px-4 py-2 text-left transition-colors text-foreground hover:bg-accent hover:text-accent-foreground">
                     <div className="flex flex-col items-start">
                       <span className="text-sm">Orders</span>

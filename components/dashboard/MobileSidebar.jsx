@@ -97,7 +97,7 @@ function MobileSidebar({ id }) {
       <SheetContent side="left" className="w-64 p-0">
         <div className="flex flex-col h-full">
           <div className="flex items-center h-16 flex-shrink-0 px-4 border-b border-border">
-            <Link href="dashboard" className="flex items-center gap-2">
+            <Link prefetch href="dashboard" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
                 <Package className="h-5 w-5 text-primary-foreground" />
               </div>
@@ -108,6 +108,7 @@ function MobileSidebar({ id }) {
             <nav className="flex-1 px-3 space-y-2">
               {navigation.map((item) => (
                 <Link
+                  prefetch
                   key={item.name}
                   href={item.href}
                   className={`

@@ -18,7 +18,9 @@ export function EmptyCart() {
           Looks like you haven't added anything to your cart yet.
         </p>
         <Button asChild className="mt-4">
-          <Link href="/products">Start Shopping</Link>
+          <Link prefetch href="/products">
+            Start Shopping
+          </Link>
         </Button>
       </CardContent>
     </Card>
